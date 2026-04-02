@@ -1,8 +1,10 @@
+// js/config.js
+
 const API_BASE =
   window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000/api'
-    : 'https://bookmyshow-backend-g9hy.onrender.com/api';
+    : 'https://bookmyshow-backend-gohy.onrender.com/api';
 
 const API = {
   async req(method, endpoint, data = null, options = {}) {
@@ -29,10 +31,12 @@ const API = {
 
     if (options.params && typeof options.params === 'object') {
       const qs = new URLSearchParams();
+
       Object.entries(options.params).forEach(([key, value]) => {
         if (value === undefined || value === null || value === '') return;
         qs.append(key, String(value));
       });
+
       const queryString = qs.toString();
       if (queryString) {
         url += (url.includes('?') ? '&' : '?') + queryString;
