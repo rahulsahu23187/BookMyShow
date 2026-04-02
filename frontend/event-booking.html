@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book Event — BookMyShow</title>
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    .ev-bk-page {
+      padding: 80px 0 60px;
+      min-height: 100vh;
+    }
+    .ev-bk-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 4%;
+    }
+    @media (max-width: 900px) {
+      .ev-layout {
+        flex-direction: column !important;
+      }
+      .ev-summary-col {
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="pageLoader">
+    <div class="ld-logo">BookMyShow</div>
+    <div class="ld-bar"><div class="ld-fill"></div></div>
+  </div>
+
+  <div id="navMount"></div>
+
+  <div class="ev-bk-page">
+    <div class="ev-bk-inner">
+      <div style="margin-bottom:24px">
+        <button
+          type="button"
+          onclick="history.back()"
+          style="cursor:pointer;color:var(--mt);font-size:.84rem;background:none;border:none;padding:0"
+        >
+          ‹ Back to Events
+        </button>
+      </div>
+
+      <div id="eventBookingContainer">
+        <div style="text-align:center;padding:50px 20px;color:var(--mt)">
+          <div style="font-size:2rem;margin-bottom:10px">⏳</div>
+          Loading event details...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 BookMyShow &nbsp;|&nbsp;
+    <a href="events.html">← Events</a>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/event-booking.js"></script>
+</body>
+</html>

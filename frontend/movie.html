@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Movie — BookMyShow</title>
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    .comment-input-wrap {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .comment-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red), #ff6b35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: .85rem;
+      flex-shrink: 0;
+    }
+
+    .comment-box {
+      flex: 1;
+      background: var(--surf);
+      border: 1px solid var(--b1);
+      border-radius: var(--rsm);
+      padding: 10px 14px;
+      color: var(--t1);
+      font-size: .86rem;
+      resize: none;
+      min-height: 70px;
+      transition: border-color var(--t);
+    }
+
+    .comment-box:focus {
+      border-color: rgba(229, 9, 20, .5);
+      outline: none;
+    }
+
+    .comment-box::placeholder {
+      color: var(--mt);
+    }
+
+    .comment-card {
+      background: var(--card);
+      border: 1px solid var(--b1);
+      border-radius: var(--r);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .comment-user-av {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: .78rem;
+      flex-shrink: 0;
+    }
+
+    .comment-user-name {
+      font-weight: 600;
+      font-size: .86rem;
+    }
+
+    .comment-time {
+      font-size: .68rem;
+      color: var(--mt);
+      margin-top: 1px;
+    }
+
+    .comment-text {
+      font-size: .84rem;
+      color: var(--t2);
+      line-height: 1.65;
+      word-break: break-word;
+    }
+
+    .comment-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .comment-like-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .76rem;
+      color: var(--mt);
+      cursor: pointer;
+      transition: color var(--t);
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .comment-like-btn:hover {
+      color: var(--red);
+    }
+
+    .comment-like-btn.liked {
+      color: var(--red);
+    }
+
+    .comment-rating-badge {
+      margin-left: auto;
+      background: rgba(245, 197, 24, .12);
+      border: 1px solid rgba(245, 197, 24, .3);
+      color: var(--gold);
+      padding: 2px 9px;
+      border-radius: 4px;
+      font-size: .72rem;
+      font-weight: 700;
+    }
+
+    .buddy-card {
+      background: linear-gradient(135deg, rgba(59, 130, 246, .08), rgba(168, 85, 247, .06));
+      border: 1px solid rgba(59, 130, 246, .2);
+      border-radius: var(--r);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .buddy-title {
+      font-family: var(--fu);
+      font-size: .96rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-strip {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+
+    .avail-legend {
+      display: flex;
+      gap: 14px;
+      padding: 0 0 10px;
+      font-size: .72rem;
+      color: var(--mt);
+      flex-wrap: wrap;
+    }
+
+    .mv-poster-art,
+    .movie-detail-poster-img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .movie-detail-poster-img {
+      object-fit: cover;
+      border-radius: inherit;
+    }
+
+    .mv-poster-art {
+      position: relative;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+
+    .mv-poster-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.6rem;
+      z-index: 1;
+      background: transparent;
+    }
+
+    @keyframes particleFloat {
+      0% {
+        opacity: .3;
+        transform: scale(1);
+      }
+      100% {
+        opacity: .6;
+        transform: scale(1.07) translateY(-8px);
+      }
+    }
+
+    .mv-glow-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(20px);
+      pointer-events: none;
+    }
+
+    .cinema-block {
+      background: var(--card);
+      border: 1px solid var(--b1);
+      border-radius: var(--r);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .cinema-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cinema-name {
+      font-weight: 700;
+      color: var(--t1);
+      margin-bottom: 7px;
+    }
+
+    .cinema-tags-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .c-tag {
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--b1);
+      color: var(--t2);
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: .7rem;
+    }
+
+    .cinema-dist {
+      font-size: .78rem;
+      color: var(--mt);
+      white-space: nowrap;
+    }
+
+    .show-slots {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .slot {
+      min-width: 106px;
+      padding: 10px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(34,197,94,.25);
+      background: rgba(34,197,94,.07);
+      color: var(--t1);
+      text-align: center;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      font-weight: 700;
+      font-size: .82rem;
+    }
+
+    .slot:hover {
+      transform: translateY(-2px);
+    }
+
+    .slot.filling {
+      border-color: rgba(255,165,0,.35);
+      background: rgba(255,165,0,.08);
+    }
+
+    .slot.almost {
+      border-color: rgba(229,9,20,.35);
+      background: rgba(229,9,20,.08);
+    }
+
+    .slot-avail {
+      display: block;
+      margin-top: 4px;
+      font-size: .62rem;
+      font-weight: 500;
+      color: var(--mt);
+    }
+
+    .text-green { color: var(--green); }
+    .text-gold { color: var(--gold); }
+    .fw7 { font-weight: 700; }
+
+    .gp {
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--b1);
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: .68rem;
+      color: var(--t2);
+      display: inline-flex;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .comment-input-wrap {
+        align-items: stretch;
+      }
+
+      .cinema-row {
+        flex-direction: column;
+      }
+
+      .slot {
+        min-width: calc(50% - 6px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="pageLoader">
+    <div class="ld-logo">BookMyShow</div>
+    <div class="ld-bar">
+      <div class="ld-fill"></div>
+    </div>
+  </div>
+
+  <div id="navMount"></div>
+
+  <div class="mv-hero" id="mvHero">
+    <div class="mv-hero-bg" id="mvBg"></div>
+    <div class="mv-hero-glow" id="mvGlow"></div>
+    <div class="mv-hero-overlay"></div>
+    <div class="mv-hero-btm"></div>
+    <div class="mv-hero-bgtxt" id="mvBgTxt"></div>
+
+    <div class="mv-hero-content">
+      <div class="mv-poster" id="mvPoster">
+        <div class="mv-poster-art" id="mvPosterArt">🎬</div>
+        <div class="mv-poster-play" id="mvTrailerBtn">▶ &nbsp;Trailer</div>
+      </div>
+
+      <div class="mv-info">
+        <h1 class="mv-title" id="mvTitle">Loading...</h1>
+
+        <div class="mv-rating-row">
+          <div class="rating-pill" id="mvRatingPill">
+            <span class="rp-star">★</span>
+            <span class="rp-score" id="mvScore">—</span>
+            <span style="font-size:.9rem;color:var(--mt)">/10</span>
+            <span class="rp-votes" id="mvVotes"></span>
+          </div>
+          <button class="btn-rate" id="mvRateBtn">Rate Now</button>
+        </div>
+
+        <div class="mv-meta" id="mvMeta"></div>
+        <div class="mv-fmts" id="mvFmts"></div>
+
+        <div class="mv-actions">
+          <a href="#showtimes" class="btn btn-red" id="mvBookBtn">🎟 Book Tickets</a>
+          <button class="mv-icon-btn" id="mvWLBtn" title="Wishlist">🤍</button>
+          <button class="mv-icon-btn" id="mvShareBtn" title="Share">📤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mv-main">
+    <div class="mv-grid">
+      <div>
+        <div class="mv-sec">
+          <h2 class="mv-sec-h">📖 About the Movie</h2>
+          <p class="mv-about" id="mvAbout"></p>
+        </div>
+
+        <div class="mv-sec">
+          <h2 class="mv-sec-h">🎭 Cast &amp; Crew</h2>
+          <div class="cast-scroll" id="mvCast"></div>
+        </div>
+
+        <div class="mv-sec">
+          <div class="buddy-card">
+            <div class="buddy-title">
+              👥 Find a Movie Buddy
+              <span style="font-size:.68rem;font-weight:400;background:rgba(59,130,246,.15);color:var(--blue);padding:2px 8px;border-radius:10px">
+                Exclusive
+              </span>
+            </div>
+            <p style="font-size:.82rem;color:var(--mt);margin-bottom:12px">
+              Going solo? Find other movie lovers watching the same show!
+            </p>
+
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <div style="display:flex;gap:-8px">
+                <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#e50914,#ff6b35);border:2px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff;font-weight:700;margin-right:-8px;z-index:3">R</div>
+                <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#a855f7);border:2px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff;font-weight:700;margin-right:-8px;z-index:2">P</div>
+                <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#3b82f6);border:2px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff;font-weight:700;z-index:1">A</div>
+              </div>
+
+              <span style="font-size:.8rem;color:var(--t2)">3 people going solo to this show</span>
+              <button class="btn btn-glass btn-sm" onclick="findBuddy()">Find My Buddy 🎬</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mv-sec" id="showtimes">
+          <h2 class="mv-sec-h">🎟 Book Tickets</h2>
+
+          <div class="date-strip" id="mvDateStrip"></div>
+
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap" id="mvShowFilters">
+            <select class="f-select" id="stLangSel" style="border-radius:var(--rsm);padding:7px 28px 7px 11px">
+              <option>All Languages</option>
+            </select>
+            <select class="f-select" id="stFmtSel" style="border-radius:var(--rsm);padding:7px 28px 7px 11px">
+              <option>All Formats</option>
+            </select>
+          </div>
+
+          <div class="avail-legend">
+            <div style="display:flex;align-items:center;gap:5px">
+              <div style="width:9px;height:9px;border-radius:50%;background:var(--green)"></div>
+              Available
+            </div>
+            <div style="display:flex;align-items:center;gap:5px">
+              <div style="width:9px;height:9px;border-radius:50%;background:#ffa500"></div>
+              Filling Fast
+            </div>
+            <div style="display:flex;align-items:center;gap:5px">
+              <div style="width:9px;height:9px;border-radius:50%;background:var(--red)"></div>
+              Almost Full
+            </div>
+          </div>
+
+          <div id="mvCinemas"></div>
+        </div>
+
+        <div class="mv-sec">
+          <h2 class="mv-sec-h">💬 User Reviews</h2>
+          <div id="mvReviews">
+            <div class="review-card">
+              <div class="rev-top">
+                <span class="rev-name">Rahul M.</span>
+                <span class="rev-score">★ 9/10</span>
+              </div>
+              <p class="rev-body">
+                Absolute masterpiece! Career-best performances. IMAX mein dekhna must hai!
+              </p>
+              <div class="rev-date">22 Mar 2026 · Mumbai</div>
+            </div>
+
+            <div class="review-card">
+              <div class="rev-top">
+                <span class="rev-name">Priya S.</span>
+                <span class="rev-score">★ 10/10</span>
+              </div>
+              <p class="rev-body">
+                Do baar dekha already! Screenplay tight hai, action jaw-dropping. Climax unforgettable!
+              </p>
+              <div class="rev-date">21 Mar 2026 · Pune</div>
+            </div>
+
+            <div class="review-card">
+              <div class="rev-top">
+                <span class="rev-name">Arjun K.</span>
+                <span class="rev-score" style="background:#4a3d00;color:var(--gold)">★ 8/10</span>
+              </div>
+              <p class="rev-body">
+                Thodi der lagi but har minute worth it hai. Direction top-notch!
+              </p>
+              <div class="rev-date">20 Mar 2026 · Delhi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mv-sec" id="commentsSection">
+          <h2 class="mv-sec-h">📝 Write Your Review</h2>
+
+          <div class="comment-input-wrap">
+            <div class="comment-avatar" id="commentAvatar">?</div>
+
+            <div style="flex:1">
+              <textarea class="comment-box" id="commentInput" placeholder="Share your thoughts about this movie.."></textarea>
+
+              <div style="display:flex;gap:10px;margin-top:8px;align-items:center;flex-wrap:wrap">
+                <span style="font-size:.78rem;color:var(--mt)">Rate this movie:</span>
+
+                <div style="display:flex;gap:4px" id="commentStars">
+                  <span class="comment-star" data-v="1" style="font-size:1.2rem;cursor:pointer;color:rgba(255,255,255,.2)">★</span>
+                  <span class="comment-star" data-v="2" style="font-size:1.2rem;cursor:pointer;color:rgba(255,255,255,.2)">★</span>
+                  <span class="comment-star" data-v="3" style="font-size:1.2rem;cursor:pointer;color:rgba(255,255,255,.2)">★</span>
+                  <span class="comment-star" data-v="4" style="font-size:1.2rem;cursor:pointer;color:rgba(255,255,255,.2)">★</span>
+                  <span class="comment-star" data-v="5" style="font-size:1.2rem;cursor:pointer;color:rgba(255,255,255,.2)">★</span>
+                </div>
+
+                <button class="btn btn-red btn-sm" id="postCommentBtn" style="margin-left:auto">
+                  Post Review
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="commentsList"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="info-panel" id="mvInfoPanel"></div>
+        <div class="info-panel" id="mvBoxOffice"></div>
+
+        <div class="info-panel" style="background:rgba(59,130,246,.04);border-color:rgba(59,130,246,.18)">
+          <div class="ip-title">
+            📊 Price Trend
+            <span style="font-size:.65rem;font-weight:400;color:var(--blue)">Exclusive</span>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:4px;height:50px;margin-bottom:8px" id="priceTrend"></div>
+          <div style="font-size:.72rem;color:var(--mt)">
+            Prices may rise on weekends. Book now!
+          </div>
+        </div>
+
+        <div class="info-panel" style="background:rgba(229,9,20,.04);border-color:rgba(229,9,20,.18)">
+          <div class="ip-title">⚡ Quick Book</div>
+          <select class="f-select" id="qbLang" style="width:100%;border-radius:var(--rsm);padding:9px 13px;margin-bottom:8px">
+            <option>Select Language</option>
+          </select>
+          <select class="f-select" id="qbFmt" style="width:100%;border-radius:var(--rsm);padding:9px 13px;margin-bottom:13px">
+            <option>Select Format</option>
+          </select>
+          <button class="btn btn-red btn-full" id="qbBtn">Book Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rate-bg" id="rateBg">
+    <div class="rate-box">
+      <h3>Rate This Movie</h3>
+      <p id="rateSub">Tell us how you found it?</p>
+
+      <div class="stars-row" id="starsRow">
+        <span class="s-btn" data-v="1">★</span><span class="s-btn" data-v="2">★</span>
+        <span class="s-btn" data-v="3">★</span><span class="s-btn" data-v="4">★</span>
+        <span class="s-btn" data-v="5">★</span><span class="s-btn" data-v="6">★</span>
+        <span class="s-btn" data-v="7">★</span><span class="s-btn" data-v="8">★</span>
+        <span class="s-btn" data-v="9">★</span><span class="s-btn" data-v="10">★</span>
+      </div>
+
+      <div class="rate-lbl" id="rateLbl">Tap a star to rate</div>
+
+      <div class="rate-acts">
+        <button class="btn btn-red" id="rateSubmit">Submit Rating</button>
+        <button class="btn btn-glass" id="rateCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 BookMyShow &nbsp;|&nbsp; <a href="index.html">← Back to Movies</a></footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/movies.js"></script>
+  <script src="js/features.js"></script>
+
+  <script>
+    let movieData = null;
+    let commentRating = 0;
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function escapeJsString(str) {
+      return String(str ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "");
+    }
+
+    function isImageUrl(value) {
+      if (!value) return false;
+      return /^(https?:)?\/\/.+\.(jpg|jpeg|png|webp|gif|avif)(\?.*)?$/i.test(value) ||
+             /^(https?:)?\/\/image\.tmdb\.org\//i.test(value) ||
+             /^(https?:)?\/\/m\.media-amazon\.com\//i.test(value) ||
+             /^data:image\//i.test(value);
+    }
+
+    function renderPosterMedia(value, title) {
+      if (isImageUrl(value)) {
+        return `
+          <img
+            src="${escapeHtml(value)}"
+            alt="${escapeHtml(title)} poster"
+            class="movie-detail-poster-img"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="mv-poster-fallback" style="display:none;">🎬</div>
+        `;
+      }
+      return `<div class="mv-poster-fallback">${escapeHtml(value || "🎬")}</div>`;
+    }
+
+    function showToast(message, type = "info") {
+      if (typeof TOAST !== "undefined" && TOAST.show) {
+        TOAST.show(message, type);
+      } else {
+        alert(message);
+      }
+    }
+
+    function getMovieIdFromUrl() {
+      return new URLSearchParams(location.search).get("id");
+    }
+
+    async function initMovieDetailPage() {
+      try {
+        if (typeof mountNavbar === "function") mountNavbar("movie");
+        if (typeof initNavSearch === "function") {
+          setTimeout(() => initNavSearch(), 50);
+        }
+
+        const id = getMovieIdFromUrl();
+        if (!id) {
+          location.href = "index.html";
+          return;
+        }
+
+        const data = await API.get(`/movies/${id}`);
+        if (!data || !data.success || !data.movie) {
+          location.href = "index.html";
+          return;
+        }
+
+        movieData = data.movie;
+        const movie = movieData;
+
+        const _id = movie._id || movie.id || id;
+        const title = movie.title || "Untitled Movie";
+        const poster = movie.poster || movie.emoji || "🎬";
+        const rating = movie.rating || "8.5";
+        const votes = movie.votes || movie.numVotes || "10K";
+        const genre = Array.isArray(movie.genre) ? movie.genre : (movie.category ? [movie.category] : ["Drama"]);
+        const lang = Array.isArray(movie.lang) ? movie.lang : (movie.language ? [movie.language] : ["Hindi"]);
+        const formats = Array.isArray(movie.formats) ? movie.formats : ["2D", "IMAX 2D"];
+        const duration = movie.duration || "2h 20m";
+        const certificate = movie.certificate || "UA";
+        const releaseDate = movie.releaseDate || movie.release || "Coming Soon";
+        const description = movie.description || "No description available.";
+        const cast = Array.isArray(movie.cast) ? movie.cast : [
+          { name: "Lead Actor", role: "Hero", emoji: "🎭", color: "#1a1a2e" },
+          { name: "Lead Actress", role: "Heroine", emoji: "🌟", color: "#2d1b69" },
+          { name: "Director", role: "Director", emoji: "🎬", color: "#0f3460" }
+        ];
+        const boxOffice = movie.boxOffice || null;
+        const accent = movie.accent || "rgba(229,9,20,.25)";
+        const bg = movie.bg || "linear-gradient(135deg,#0f0f1a,#1a1a2e,#2d1b69)";
+
+        document.title = `${title} — BookMyShow`;
+
+        document.getElementById("mvBg").style.background = bg;
+        document.getElementById("mvBgTxt").textContent = title.toUpperCase();
+
+        const posterCard = document.getElementById("mvPoster");
+        posterCard.style.background = bg;
+        document.getElementById("mvPosterArt").innerHTML = renderPosterMedia(poster, title);
+
+        const glow = document.getElementById("mvGlow");
+        glow.innerHTML = "";
+        [
+          [accent, "-80px", "60px", "280px"],
+          [accent, "60px", "380px", "220px"]
+        ].forEach(([c, t, r, s]) => {
+          const blob = document.createElement("div");
+          blob.className = "mv-glow-blob";
+          blob.style.cssText = `width:${s};height:${s};background:${c};top:${t};right:${r};animation:particleFloat ${3.5 + Math.random() * 2}s ease-in-out infinite alternate`;
+          glow.appendChild(blob);
+        });
+
+        document.getElementById("mvTitle").textContent = title;
+        document.getElementById("mvScore").textContent = rating;
+        document.getElementById("mvVotes").textContent = ` (${votes}+ Votes)`;
+
+        document.getElementById("mvMeta").innerHTML = `
+          <span style="font-size:.83rem;color:var(--t2)">⏱ ${escapeHtml(duration)}</span>
+          <span class="mv-sep">·</span><span style="font-size:.83rem;color:var(--t2)">${escapeHtml(genre.join(", "))}</span>
+          <span class="mv-sep">·</span><span class="mv-cert">${escapeHtml(certificate)}</span>
+          <span class="mv-sep">·</span><span style="font-size:.83rem;color:var(--t1);font-weight:500">${escapeHtml(releaseDate)}</span>
+        `;
+
+        document.getElementById("mvFmts").innerHTML =
+          formats.map(f => `<span class="fmt-pill fmt-type">${escapeHtml(f)}</span>`).join("") +
+          lang.slice(0, 3).map(l => `<span class="fmt-pill fmt-lang">${escapeHtml(l)}</span>`).join("") +
+          (lang.length > 3 ? `<span class="fmt-pill fmt-lang">+${lang.length - 3}</span>` : "");
+
+        document.getElementById("mvAbout").textContent = description;
+
+        document.getElementById("mvCast").innerHTML = cast.map(c => `
+          <div class="cast-card">
+            <div class="cast-av" style="background:${escapeHtml(c.color || "#1a1a2e")}">${escapeHtml(c.emoji || "🎭")}</div>
+            <div class="cast-name">${escapeHtml(c.name || "Artist")}</div>
+            <div class="cast-role">${escapeHtml(c.role || "Cast")}</div>
+          </div>
+        `).join("");
+
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const mons = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const today = new Date();
+
+        let dateHtml = "";
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(today);
+          d.setDate(today.getDate() + i);
+
+          const label = i === 0
+            ? "Today"
+            : i === 1
+            ? "Tomorrow"
+            : `${days[d.getDay()]}, ${d.getDate()} ${mons[d.getMonth()]}`;
+
+          dateHtml += `
+            <button class="date-btn ${i === 0 ? "on" : ""}" onclick="selDate(this,'${escapeJsString(label)}')">
+              <span class="d-num">${d.getDate()}</span>
+              <span class="d-day">${days[d.getDay()]}, ${mons[d.getMonth()]}</span>
+            </button>
+          `;
+        }
+
+        document.getElementById("mvDateStrip").innerHTML = dateHtml;
+        window._selDate = "Today";
+
+        const langSel = document.getElementById("stLangSel");
+        const fmtSel = document.getElementById("stFmtSel");
+
+        lang.forEach(l => {
+          const o = document.createElement("option");
+          o.value = l;
+          o.textContent = l;
+          langSel.appendChild(o);
+        });
+
+        formats.forEach(f => {
+          const o = document.createElement("option");
+          o.value = f;
+          o.textContent = f;
+          fmtSel.appendChild(o);
+        });
+
+        const cinemas = [
+          {
+            name: "PVR IMAX Juhu, Mumbai",
+            logo: "PVR",
+            tags: ["IMAX 2D", "M-TICKET", "F&B"],
+            dist: "2.4 km",
+            shows: [
+              { t: "10:30 AM", s: "" },
+              { t: "1:45 PM", s: "filling" },
+              { t: "5:00 PM", s: "almost" },
+              { t: "8:30 PM", s: "" },
+              { t: "11:45 PM", s: "" }
+            ]
+          },
+          {
+            name: "Cinépolis Andheri West",
+            logo: "CNP",
+            tags: ["DOLBY", "RECLINER"],
+            dist: "4.1 km",
+            shows: [
+              { t: "9:00 AM", s: "" },
+              { t: "12:30 PM", s: "almost" },
+              { t: "4:15 PM", s: "filling" },
+              { t: "7:30 PM", s: "" }
+            ]
+          },
+          {
+            name: "INOX Nariman Point",
+            logo: "INOX",
+            tags: ["2D", "4DX"],
+            dist: "8.7 km",
+            shows: [
+              { t: "11:00 AM", s: "" },
+              { t: "2:30 PM", s: "" },
+              { t: "6:00 PM", s: "filling" },
+              { t: "9:30 PM", s: "almost" }
+            ]
+          },
+          {
+            name: "HDFC Millennia PVR ICON Goregaon",
+            logo: "PVR",
+            tags: ["PLAYHOUSE", "RECLINER", "DOLBY"],
+            dist: "5.2 km",
+            shows: [
+              { t: "10:00 AM", s: "" },
+              { t: "1:30 PM", s: "" },
+              { t: "4:00 PM", s: "filling" },
+              { t: "7:30 PM", s: "" }
+            ]
+          },
+          {
+            name: "Fun Cinemas K Star Mall Chembur",
+            logo: "FUN",
+            tags: ["2D"],
+            dist: "6.8 km",
+            shows: [
+              { t: "11:30 AM", s: "" },
+              { t: "3:00 PM", s: "" },
+              { t: "6:30 PM", s: "" },
+              { t: "10:00 PM", s: "" }
+            ]
+          }
+        ];
+
+        const renderCinemas = () => {
+          const selectedLang = langSel.value && langSel.value !== "All Languages" ? langSel.value : (lang[0] || "Hindi");
+          const selectedFormat = fmtSel.value && fmtSel.value !== "All Formats" ? fmtSel.value : (formats[0] || "2D");
+
+          document.getElementById("mvCinemas").innerHTML = cinemas.map(c => `
+            <div class="cinema-block">
+              <div class="cinema-row">
+                <div>
+                  <div class="cinema-name">${escapeHtml(c.name)}</div>
+                  <div class="cinema-tags-row">${c.tags.map(t => `<span class="c-tag">${escapeHtml(t)}</span>`).join("")}</div>
+                </div>
+                <div class="cinema-dist">📍 ${escapeHtml(c.dist)}</div>
+              </div>
+              <div class="show-slots">
+                ${c.shows.map(s => `
+                  <div
+                    class="slot ${s.s}"
+                    onclick="handleShowClick('${escapeJsString(_id)}','${escapeJsString(c.name)}','${escapeJsString(s.t)}','${escapeJsString(selectedFormat)}','${escapeJsString(selectedLang)}')"
+                  >
+                    ${escapeHtml(s.t)}
+                    <span class="slot-avail">${s.s === "almost" ? "Almost Full" : s.s === "filling" ? "Filling Fast" : "Available"}</span>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          `).join("");
+        };
+
+        renderCinemas();
+        langSel.addEventListener("change", renderCinemas);
+        fmtSel.addEventListener("change", renderCinemas);
+
+        document.getElementById("mvInfoPanel").innerHTML = `
+          <div class="ip-title">ℹ️ Movie Info</div>
+          <div class="ip-row"><span class="ip-k">Language</span><span class="ip-v">${escapeHtml(lang.join(", "))}</span></div>
+          <div class="ip-row"><span class="ip-k">Genre</span><span class="ip-v"><div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">${genre.map(g => `<span class="gp">${escapeHtml(g)}</span>`).join("")}</div></span></div>
+          <div class="ip-row"><span class="ip-k">Duration</span><span class="ip-v">${escapeHtml(duration)}</span></div>
+          <div class="ip-row"><span class="ip-k">Release</span><span class="ip-v">${escapeHtml(releaseDate)}</span></div>
+          <div class="ip-row"><span class="ip-k">Certificate</span><span class="ip-v">${escapeHtml(certificate)}</span></div>
+          <div class="ip-row"><span class="ip-k">Formats</span><span class="ip-v">${escapeHtml(formats.join(", "))}</span></div>
+        `;
+
+        document.getElementById("mvBoxOffice").innerHTML = boxOffice ? `
+          <div class="ip-title">💰 Box Office</div>
+          <div class="ip-row"><span class="ip-k">Opening Day</span><span class="ip-v text-green">${escapeHtml(boxOffice.opening || "—")}</span></div>
+          <div class="ip-row"><span class="ip-k">Weekend</span><span class="ip-v text-green">${escapeHtml(boxOffice.weekend || "—")}</span></div>
+          <div class="ip-row"><span class="ip-k">Total</span><span class="ip-v text-gold fw7">${escapeHtml(boxOffice.total || "—")}</span></div>
+          <div class="ip-row"><span class="ip-k">Budget</span><span class="ip-v">${escapeHtml(boxOffice.budget || "—")}</span></div>
+        ` : `
+          <div class="ip-title">💰 Box Office</div>
+          <p style="font-size:.78rem;color:var(--mt);padding:6px 0">Not yet released</p>
+        `;
+
+        const trendEl = document.getElementById("priceTrend");
+        if (trendEl) {
+          const heights = [40, 52, 45, 65, 70, 85, 100];
+          const daysForTrend = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+          trendEl.innerHTML = heights.map((h, i) => `
+            <div
+              title="${daysForTrend[i]}"
+              style="flex:1;height:${h}%;background:${i >= 5 ? 'var(--red)' : 'var(--blue)'};border-radius:2px 2px 0 0;opacity:.7;cursor:pointer"
+              onclick="showToast('Weekday rates are lower! Book now','info')">
+            </div>
+          `).join("");
+        }
+
+        document.getElementById("qbLang").innerHTML =
+          "<option>Select Language</option>" + lang.map(l => `<option>${escapeHtml(l)}</option>`).join("");
+
+        document.getElementById("qbFmt").innerHTML =
+          "<option>Select Format</option>" + formats.map(f => `<option>${escapeHtml(f)}</option>`).join("");
+
+        document.getElementById("qbBtn").addEventListener("click", () => {
+          const l = document.getElementById("qbLang").value;
+          const f = document.getElementById("qbFmt").value;
+
+          if (l.startsWith("Select") || f.startsWith("Select")) {
+            showToast("Select language and format first", "warn");
+            return;
+          }
+
+          document.getElementById("showtimes").scrollIntoView({ behavior: "smooth" });
+          langSel.value = l;
+          fmtSel.value = f;
+          renderCinemas();
+        });
+
+        const wlBtn = document.getElementById("mvWLBtn");
+
+        const isWishlistedCompat = (movieId) => {
+          if (typeof isWishlisted === "function") return isWishlisted(movieId);
+          const list = JSON.parse(localStorage.getItem("mz_wishlist") || "[]");
+          return list.includes(movieId);
+        };
+
+        const toggleWishlistCompat = (movieId) => {
+          if (typeof toggleWishlistItem === "function") return toggleWishlistItem(movieId, wlBtn);
+          if (typeof toggleWL === "function") return toggleWL(movieId, wlBtn);
+
+          let list = JSON.parse(localStorage.getItem("mz_wishlist") || "[]");
+          if (list.includes(movieId)) {
+            list = list.filter(x => x !== movieId);
+          } else {
+            list.push(movieId);
+          }
+          localStorage.setItem("mz_wishlist", JSON.stringify(list));
+          updateWL();
+        };
+
+        const updateWL = () => {
+          const on = isWishlistedCompat(_id);
+          wlBtn.textContent = on ? "❤️" : "🤍";
+          wlBtn.classList.toggle("wl-on", on);
+        };
+
+        updateWL();
+        wlBtn.addEventListener("click", () => toggleWishlistCompat(_id));
+
+        document.getElementById("mvShareBtn").addEventListener("click", async () => {
+          try {
+            if (navigator.share) {
+              await navigator.share({ title, url: location.href });
+            } else if (navigator.clipboard) {
+              await navigator.clipboard.writeText(location.href);
+              showToast("Link copied!", "success");
+            } else {
+              prompt("Copy this link:", location.href);
+            }
+          } catch (e) {}
+        });
+
+        document.getElementById("mvTrailerBtn").addEventListener("click", () => {
+          showToast("🎬 Opening Trailer Player...", "info");
+          setTimeout(() => {
+            window.open(
+              `https://www.youtube.com/results?search_query=${encodeURIComponent(title + " official trailer")}`,
+              "_blank"
+            );
+          }, 500);
+        });
+
+        let selectedRating = 0;
+        const labels = ["", "Terrible", "Very Bad", "Bad", "Poor", "Average", "Good", "Very Good", "Great", "Excellent", "Masterpiece! 🔥"];
+
+        const openRate = () => document.getElementById("rateBg").classList.add("open");
+
+        document.getElementById("mvRateBtn").addEventListener("click", openRate);
+        document.getElementById("mvRatingPill").addEventListener("click", openRate);
+        document.getElementById("rateCancel").addEventListener("click", () => {
+          document.getElementById("rateBg").classList.remove("open");
+        });
+
+        document.getElementById("rateBg").addEventListener("click", e => {
+          if (e.target.id === "rateBg") {
+            document.getElementById("rateBg").classList.remove("open");
+          }
+        });
+
+        document.getElementById("rateSub").textContent = `How was ${title}?`;
+
+        document.querySelectorAll(".s-btn").forEach(b => {
+          b.addEventListener("click", () => {
+            selectedRating = parseInt(b.dataset.v, 10);
+            document.querySelectorAll(".s-btn").forEach(x => {
+              x.classList.toggle("lit", parseInt(x.dataset.v, 10) <= selectedRating);
+            });
+            document.getElementById("rateLbl").textContent = `${selectedRating}/10 — ${labels[selectedRating]}`;
+          });
+        });
+
+        document.getElementById("rateSubmit").addEventListener("click", () => {
+          if (!selectedRating) {
+            showToast("Select a rating first", "warn");
+            return;
+          }
+
+          document.getElementById("rateBg").classList.remove("open");
+          showToast(`Rated ${title}: ${selectedRating}/10 ⭐`, "success");
+
+          const ratings = JSON.parse(localStorage.getItem("mz_ratings") || "{}");
+          ratings[_id] = selectedRating;
+          localStorage.setItem("mz_ratings", JSON.stringify(ratings));
+        });
+
+        const user = (typeof SESSION !== "undefined" && SESSION.getUser) ? SESSION.getUser() : null;
+        const av = document.getElementById("commentAvatar");
+        if (av) {
+          av.textContent = user?.name ? user.name[0].toUpperCase() : "?";
+        }
+
+        document.querySelectorAll(".comment-star").forEach(s => {
+          s.addEventListener("click", () => {
+            commentRating = parseInt(s.dataset.v, 10);
+            document.querySelectorAll(".comment-star").forEach(x => {
+              x.style.color = parseInt(x.dataset.v, 10) <= commentRating ? "var(--gold)" : "rgba(255,255,255,.2)";
+            });
+          });
+        });
+
+        const postBtn = document.getElementById("postCommentBtn");
+        if (postBtn) {
+          postBtn.addEventListener("click", postComment);
+        }
+
+        loadComments(_id);
+
+        const loader = document.getElementById("pageLoader");
+        if (loader) {
+          setTimeout(() => loader.classList.add("gone"), 400);
+        }
+
+      } catch (err) {
+        console.error(err);
+        showToast("Error: " + (err.message || "Something went wrong"), "error");
+      }
+    }
+
+    window.selDate = function(btn, date) {
+      document.querySelectorAll(".date-btn").forEach(b => b.classList.remove("on"));
+      btn.classList.add("on");
+      window._selDate = date;
+    };
+
+    window.handleShowClick = function(movieId, cinema, time, format, language) {
+      if (!(typeof SESSION !== "undefined" && SESSION.isLoggedIn && SESSION.isLoggedIn())) {
+        location.href = `login.html?redirect=${encodeURIComponent(location.href)}`;
+        return;
+      }
+
+      if (typeof showSeatCountPopup === "function") {
+        showSeatCountPopup(movieId, cinema, time, window._selDate || "Today", format, language);
+      } else {
+        location.href =
+          `booking.html?id=${encodeURIComponent(movieId)}` +
+          `&cinema=${encodeURIComponent(cinema)}` +
+          `&time=${encodeURIComponent(time)}` +
+          `&date=${encodeURIComponent(window._selDate || "Today")}` +
+          `&format=${encodeURIComponent(format)}` +
+          `&language=${encodeURIComponent(language || "")}`;
+      }
+    };
+
+    window.findBuddy = function() {
+      if (!(typeof SESSION !== "undefined" && SESSION.isLoggedIn && SESSION.isLoggedIn())) {
+        showToast("Login to find a movie buddy!", "warn");
+        return;
+      }
+
+      showToast("🎬 Finding movie buddies for your show... (Feature coming soon!)", "info");
+    };
+
+    function getStoredComments(movieId) {
+      return JSON.parse(localStorage.getItem(`mz_comments_${movieId}`) || "[]");
+    }
+
+    function loadComments(movieId) {
+      const stored = getStoredComments(movieId);
+
+      const defaults = [
+        {
+          user: "Rahul M.",
+          avatar: "R",
+          text: "Absolute masterpiece! Career-best performances. IMAX mein dekhna must hai!",
+          rating: 9,
+          time: "22 Mar 2026 · Mumbai",
+          likes: 48,
+          city: "Mumbai"
+        },
+        {
+          user: "Priya S.",
+          avatar: "P",
+          text: "Do baar dekha already! Screenplay tight hai, action jaw-dropping. Climax unforgettable!",
+          rating: 10,
+          time: "21 Mar 2026 · Pune",
+          likes: 32,
+          city: "Pune"
+        },
+        {
+          user: "Arjun K.",
+          avatar: "A",
+          text: "Thodi der lagi but har minute worth it hai. Direction top-notch!",
+          rating: 8,
+          time: "20 Mar 2026 · Delhi",
+          likes: 19,
+          city: "Delhi"
+        }
+      ];
+
+      const all = [...stored, ...defaults];
+      renderComments(all, movieId);
+    }
+
+    function renderComments(comments, movieId) {
+      const el = document.getElementById("commentsList");
+      if (!el) return;
+
+      if (!comments.length) {
+        el.innerHTML = `<div style="text-align:center;padding:30px;color:var(--mt)">Be the first to review this movie!</div>`;
+        return;
+      }
+
+      el.innerHTML = comments.map((c, i) => `
+        <div class="comment-card">
+          <div class="comment-header">
+            <div class="comment-user-av">${escapeHtml(c.avatar || (c.user ? c.user[0] : "?"))}</div>
+            <div>
+              <div class="comment-user-name">${escapeHtml(c.user || "User")}</div>
+              <div class="comment-time">${escapeHtml(c.time || "")}</div>
+            </div>
+            ${c.rating ? `<div class="comment-rating-badge" style="margin-left:auto">★ ${escapeHtml(c.rating)}/10</div>` : ""}
+          </div>
+          <div class="comment-text">${escapeHtml(c.text || "")}</div>
+          <div class="comment-actions">
+            <button class="comment-like-btn ${c.liked ? "liked" : ""}" onclick="likeComment(${i},'${escapeJsString(movieId)}',this)">
+              👍 Helpful (${Number(c.likes || 0)})
+            </button>
+            <button class="comment-like-btn" onclick="replyComment('${escapeJsString(c.user || "User")}')">💬 Reply</button>
+            ${c.city ? `<span style="font-size:.68rem;color:var(--mt);margin-left:auto">📍 ${escapeHtml(c.city)}</span>` : ""}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    window.postComment = function() {
+      const inp = document.getElementById("commentInput");
+      const text = inp?.value.trim();
+
+      if (!text) {
+        showToast("Write something first!", "warn");
+        return;
+      }
+
+      if (!(typeof SESSION !== "undefined" && SESSION.isLoggedIn && SESSION.isLoggedIn())) {
+        showToast("Login to post a review", "warn");
+        location.href = "login.html";
+        return;
+      }
+
+      const user = SESSION.getUser();
+      const movieId = getMovieIdFromUrl();
+      const stored = getStoredComments(movieId);
+      const city = localStorage.getItem("mz_city") || "Mumbai";
+
+      const newComment = {
+        user: user?.name || "Guest User",
+        avatar: user?.name ? user.name[0].toUpperCase() : "G",
+        text,
+        rating: commentRating ? commentRating * 2 : null,
+        time: `${new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })} · ${city}`,
+        likes: 0,
+        city
+      };
+
+      stored.unshift(newComment);
+      localStorage.setItem(`mz_comments_${movieId}`, JSON.stringify(stored));
+
+      inp.value = "";
+      commentRating = 0;
+      document.querySelectorAll(".comment-star").forEach(s => {
+        s.style.color = "rgba(255,255,255,.2)";
+      });
+
+      loadComments(movieId);
+      showToast("Review posted! Thanks for sharing 🎬", "success");
+    };
+
+    window.likeComment = function(idx, movieId, btn) {
+      btn.classList.toggle("liked");
+      const match = btn.textContent.match(/\d+/);
+      const num = match ? parseInt(match[0], 10) : 0;
+      btn.textContent = `👍 Helpful (${btn.classList.contains("liked") ? num + 1 : Math.max(0, num - 1)})`;
+    };
+
+    window.replyComment = function(user) {
+      showToast(`Replying to ${user}... (Feature coming soon!)`, "info");
+    };
+
+    document.addEventListener("DOMContentLoaded", initMovieDetailPage);
+  </script>
+</body>
+</html>

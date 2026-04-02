@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Search — BookMyShow</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="pageLoader">
+        <div class="ld-logo">BookMyShow</div>
+        <div class="ld-bar">
+            <div class="ld-fill"></div>
+        </div>
+    </div>
+    <div id="navMount"></div>
+
+    <div class="search-page">
+        <div class="search-hero">
+            <div class="search-hero-inner">
+                <h2 style="font-family:var(--fu);font-size:1.3rem;font-weight:700;margin-bottom:12px">🔍 Search Movies &amp; Events</h2>
+                <input type="text" id="searchBigInp" class="search-big-inp" placeholder="Type movie name, genre, actor..." autofocus>
+                <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                    <span style="font-size:.78rem;color:var(--muted)">Popular:</span>
+                    <span class="f-chip" onclick="quickSearch('Action')">Action</span>
+                    <span class="f-chip" onclick="quickSearch('Thriller')">Thriller</span>
+                    <span class="f-chip" onclick="quickSearch('Ranbir')">Ranbir Kapoor</span>
+                    <span class="f-chip" onclick="quickSearch('Prabhas')">Prabhas</span>
+                    <span class="f-chip" onclick="quickSearch('Horror')">Horror</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="padding-top:24px">
+            <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+                <select class="f-select" id="srGenre" style="border-radius:var(--rsm);padding:7px 28px 7px 11px">
+        <option value="">All Genres</option>
+        <option>Action</option><option>Thriller</option><option>Drama</option>
+        <option>Comedy</option><option>Horror</option><option>Sci-Fi</option>
+        <option>Crime</option><option>War</option><option>Historical</option>
+      </select>
+                <select class="f-select" id="srRating" style="border-radius:var(--rsm);padding:7px 28px 7px 11px">
+        <option value="">Any Rating</option>
+        <option value="9">9+ Exceptional</option>
+        <option value="8">8+ Great</option>
+        <option value="7">7+ Good</option>
+      </select>
+                <select class="f-select" id="srSort" style="border-radius:var(--rsm);padding:7px 28px 7px 11px">
+        <option value="rating">Sort: Rating</option>
+        <option value="title">Sort: A-Z</option>
+        <option value="recent">Sort: Recent</option>
+      </select>
+                <span id="srCount" style="font-size:.8rem;color:var(--muted);margin-left:auto"></span>
+            </div>
+            <div class="movies-grid" id="srGrid">
+                <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">Start typing to search movies...</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 BookMyShow &nbsp;|&nbsp; <a href="index.html">← Home</a></footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/movies.js"></script>
+    <script>
+        mountNavbar('');
+        setTimeout(initNavSearch, 50);
+
+        let searchTimer, allMovies = [];
+
+        async function initSearchPage() {
+            const data = await API.get('/movies?limit=50');
+            if (data.success) allMovies = data.movies;
+
+            const q = new URLSearchParams(location.search).get('q') || '';
+            const filter = new URLSearchParams(location.search).get('filter') || '';
+
+            if (q) {
+                document.getElementById('searchBigInp').value = q;
+                doSearch(q);
+            } else if (filter) {
+                applyPreset(filter);
+            } else {
+                renderGrid('srGrid', allMovies.slice(0, 30), '');
+                updateCount(allMovies.length);
+            }
+
+            document.getElementById('searchBigInp').addEventListener('input', e => {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => doSearch(e.target.value.trim()), 300);
+            });
+            ['srGenre', 'srRating', 'srSort'].forEach(id => document.getElementById(id) ?.addEventListener('change', () => doSearch(document.getElementById('searchBigInp').value.trim())));
+        }
+
+        function applyPreset(filter) {
+            let movies = allMovies;
+            if (filter === 'trending') movies = movies.filter(m => m.trending);
+            else if (filter === 'popular') movies = movies.filter(m => m.popular);
+            else if (filter === 'upcoming') movies = movies.filter(m => m.upcoming);
+            else if (filter === 'now') movies = movies.filter(m => m.nowShowing && !m.upcoming);
+            renderGrid('srGrid', movies, '');
+            updateCount(movies.length);
+        }
+
+        function doSearch(q) {
+            let results = allMovies;
+            if (q) results = results.filter(m => m.title.toLowerCase().includes(q.toLowerCase()) || (m.genre || []).some(g => g.toLowerCase().includes(q.toLowerCase())) || (m.cast || []).some(c => c.name.toLowerCase().includes(q.toLowerCase())));
+            const genre = document.getElementById('srGenre').value;
+            const rating = document.getElementById('srRating').value;
+            const sort = document.getElementById('srSort').value;
+            if (genre) results = results.filter(m => (m.genre || []).includes(genre));
+            if (rating) results = results.filter(m => m.rating >= parseFloat(rating));
+            if (sort === 'title') results.sort((a, b) => a.title.localeCompare(b.title));
+            else if (sort === 'recent') results.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+            else results.sort((a, b) => b.rating - a.rating);
+            renderGrid('srGrid', results, '');
+            updateCount(results.length);
+        }
+
+        function updateCount(n) {
+            const el = document.getElementById('srCount');
+            if (el) el.textContent = `${n} movie${n!==1?'s':''} found`;
+        }
+
+        window.quickSearch = function(q) {
+            document.getElementById('searchBigInp').value = q;
+            doSearch(q);
+        };
+
+        document.addEventListener('DOMContentLoaded', initSearchPage);
+    </script>
+</body>
+
+</html>

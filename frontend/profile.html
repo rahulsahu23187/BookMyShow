@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Profile — BookMyShow</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+  .profile-poster-wrap{
+    width:72px;
+    height:72px;
+    border-radius:14px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2rem;
+    color:#fff;
+    flex-shrink:0;
+    border:1px solid rgba(255,255,255,.08);
+    background:#1a1a2e;
+    position:relative;
+  }
+
+  .profile-poster-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .profile-poster-fallback{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2rem;
+  }
+
+  .bk-hist-card{
+    cursor:pointer;
+  }
+
+  .reward-coupon.locked{
+    opacity:.45;
+    filter:grayscale(.25);
+    border-color:rgba(255,255,255,.08);
+  }
+
+  .reward-coupon.unlocked{
+    opacity:1;
+    filter:none;
+    border-color:rgba(34,197,94,.5);
+    box-shadow:0 0 0 1px rgba(34,197,94,.12) inset;
+  }
+
+  .member-badge.bronze{ background:rgba(205,127,50,.14); color:#f2b37b; border:1px solid rgba(205,127,50,.28); }
+  .member-badge.silver{ background:rgba(192,192,192,.14); color:#e7e7e7; border:1px solid rgba(192,192,192,.28); }
+  .member-badge.gold{ background:rgba(245,197,24,.14); color:#ffd95c; border:1px solid rgba(245,197,24,.28); }
+  .member-badge.platinum{ background:rgba(123,104,238,.14); color:#d5cbff; border:1px solid rgba(123,104,238,.28); }
+
+  @media (max-width: 700px){
+    .profile-hero-card{
+      grid-template-columns:1fr !important;
+      gap:16px;
+    }
+    .points-card{
+      justify-self:stretch !important;
+      width:100%;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="pageLoader">
+  <div class="ld-logo">BookMyShow</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<div id="navMount"></div>
+
+<div class="page">
+  <div class="container" style="padding-top:28px;padding-bottom:70px">
+
+    <div class="profile-hero-card">
+      <div class="profile-av" id="profAv">U</div>
+      <div>
+        <div class="profile-name" id="profName">Loading...</div>
+        <div class="profile-email" id="profEmail">—</div>
+        <div style="font-size:.75rem;color:var(--mt);margin-top:3px" id="profCity">📍 —</div>
+        <div class="profile-badges" id="profBadges"></div>
+      </div>
+      <div class="points-card">
+        <div class="points-ico">🏆</div>
+        <div>
+          <div class="points-num" id="profPoints">0</div>
+          <div class="points-lbl">Loyalty Points</div>
+          <div style="font-size:.64rem;color:var(--mt);margin-top:1px">1 pt = ₹0.10 off</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-tabs">
+      <div class="p-tab on" onclick="switchTab('bookings',this)">🎟 My Bookings</div>
+      <div class="p-tab" onclick="switchTab('wishlist',this)">❤️ Wishlist</div>
+      <div class="p-tab" onclick="switchTab('settings',this)">⚙️ Settings</div>
+      <div class="p-tab" onclick="switchTab('rewards',this)">🏆 Rewards</div>
+    </div>
+
+    <div class="p-panel show" id="tab_bookings">
+      <div id="bookingsList">
+        <div class="empty">
+          <div class="empty-ico">🎟</div>
+          <div class="empty-txt">No bookings yet</div>
+          <div class="empty-sub">Your booking history will appear here</div>
+          <a href="index.html" class="btn btn-red btn-sm" style="margin-top:14px;display:inline-flex">Browse Movies</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-panel" id="tab_wishlist">
+      <div id="wishlistContent">
+        <div class="empty">
+          <div class="empty-ico">❤️</div>
+          <div class="empty-txt">Wishlist is empty</div>
+          <div class="empty-sub">Tap the heart icon on any movie to save it</div>
+          <a href="index.html" class="btn btn-red btn-sm" style="margin-top:14px;display:inline-flex">Explore Movies</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-panel" id="tab_settings">
+      <div class="settings-sec">
+        <div class="settings-h">👤 Edit Profile</div>
+        <div class="fg"><label class="fl">FULL NAME</label><input type="text" id="editName" class="fi" placeholder="Your name"></div>
+        <div class="fg"><label class="fl">PHONE</label><input type="text" id="editPhone" class="fi" placeholder="+91 9876543210"></div>
+        <div class="fg">
+          <label class="fl">CITY</label>
+          <select id="editCity" class="fi" style="background:var(--surf)">
+            <option>Mumbai</option>
+            <option>Delhi-NCR</option>
+            <option>Bengaluru</option>
+            <option>Hyderabad</option>
+            <option>Chennai</option>
+            <option>Kolkata</option>
+            <option>Pune</option>
+          </select>
+        </div>
+        <button class="btn btn-red btn-sm" onclick="saveProfile()">Save Changes</button>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-h">🔔 Notifications</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">New Movie Releases</div>
+            <div class="settings-desc">Upcoming movie alerts</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">Booking Reminders</div>
+            <div class="settings-desc">2 hrs before your show</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">Smart Check-in</div>
+            <div class="settings-desc">Traffic & parking alerts <span style="color:var(--purple);font-size:.65rem">EXCLUSIVE</span></div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">Offers & Deals</div>
+            <div class="settings-desc">Discount coupons</div>
+          </div>
+          <div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-h">🎨 Appearance</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">Dark Mode</div>
+            <div class="settings-desc">Switch theme</div>
+          </div>
+          <div class="toggle" id="darkToggle" onclick="toggleDarkMode()"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-h">⚠️ Account</div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">Clear Local Bookings</div>
+            <div class="settings-desc">Clear cached data</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="clearLocalBk()">Clear</button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-lbl">Clear Wishlist</div>
+            <div class="settings-desc">Remove all saved movies</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="clearWL()">Clear</button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-lbl">Sign Out</div></div>
+          <button class="btn btn-red btn-sm" onclick="doLogout()">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-panel" id="tab_rewards">
+
+      <div class="rewards-wallet-card" id="rewardsWalletCard">
+        <div class="rewards-top">
+          <div>
+            <div class="rewards-title">🏆 BookMyShow Rewards</div>
+            <div class="rewards-points-big" id="rewardPoints">0</div>
+            <div class="rewards-points-sub">Total Points Earned</div>
+          </div>
+          <div class="member-badge gold" id="memberTier">⭐ Member</div>
+        </div>
+
+        <div class="rewards-progress-lbl">
+          <span>Your next milestone</span>
+          <span id="nextReward">🍿 Free Popcorn at 10 movies</span>
+        </div>
+        <div class="rewards-progress">
+          <div class="rewards-progress-fill" id="rewardProgress" style="width:0%"></div>
+        </div>
+
+        <div class="rewards-mid">
+          <div class="reward-stat">
+            <div class="reward-stat-icon">🎟</div>
+            <div class="reward-stat-title">Movies Booked</div>
+            <div class="reward-stat-value" id="moviesBookedCount">0</div>
+          </div>
+          <div class="reward-stat">
+            <div class="reward-stat-icon">🎁</div>
+            <div class="reward-stat-title">Unlocked Rewards</div>
+            <div class="reward-stat-value" id="unlockedRewardsCount">0</div>
+          </div>
+          <div class="reward-stat">
+            <div class="reward-stat-icon">💸</div>
+            <div class="reward-stat-title">Points Value</div>
+            <div class="reward-stat-value" id="pointsValue">₹0</div>
+          </div>
+        </div>
+
+        <div class="rewards-actions">
+          <button class="redeem-btn" onclick="switchTab('rewards', document.querySelectorAll('.p-tab')[3])">Redeem Now</button>
+          <button class="history-btn" onclick="safeToast('Reward history feature coming soon!','info')">View History</button>
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-h">📈 How to Earn More</div>
+        <div style="background:var(--surf);border-radius:var(--rsm);padding:12px;font-size:.78rem;color:var(--mt);line-height:1.9">
+          <strong style="color:var(--t1)">Earn points faster:</strong><br>
+          🎬 Book a ticket → 1 pt per ₹10 spent<br>
+          ⭐ Rate a movie → +10 pts<br>
+          📤 Refer a friend → +100 pts<br>
+          🎂 Birthday bonus → +200 pts<br>
+          🍔 Food order with booking → +25 pts bonus
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-h">🎬 Milestone Rewards</div>
+        <div class="reward-coupons" id="milestoneRewards">
+          <div class="reward-coupon locked" id="milestone10">
+            <div class="reward-coupon-points">10 Movies</div>
+            <div class="reward-coupon-text">🍿 Free Popcorn<br><span style="color:var(--mt)">Unlock after 10 bookings</span></div>
+          </div>
+
+          <div class="reward-coupon locked" id="milestone20">
+            <div class="reward-coupon-points">20 Movies</div>
+            <div class="reward-coupon-text">🍔 Free Food Combo<br><span style="color:var(--mt)">Burger / Fries / Combo</span></div>
+          </div>
+
+          <div class="reward-coupon locked" id="milestone30">
+            <div class="reward-coupon-points">30 Movies</div>
+            <div class="reward-coupon-text">🎟 Free Movie Ticket<br><span style="color:var(--mt)">1 complimentary ticket</span></div>
+          </div>
+
+          <div class="reward-coupon locked" id="milestone50">
+            <div class="reward-coupon-points">50 Movies</div>
+            <div class="reward-coupon-text">💎 VIP Lounge Access<br><span style="color:var(--mt)">Premium experience</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-sec">
+        <div class="settings-h">🎁 Redeem Points</div>
+        <div class="reward-coupons">
+          <div class="reward-coupon" onclick="redeem('Free Popcorn',200)">
+            <div class="reward-coupon-points">200 pts</div>
+            <div class="reward-coupon-text">🍿 Free Popcorn</div>
+          </div>
+
+          <div class="reward-coupon" onclick="redeem('Food Combo',500)">
+            <div class="reward-coupon-points">500 pts</div>
+            <div class="reward-coupon-text">🍔 Food Combo</div>
+          </div>
+
+          <div class="reward-coupon" onclick="redeem('₹100 Off',800)">
+            <div class="reward-coupon-points">800 pts</div>
+            <div class="reward-coupon-text">💸 ₹100 OFF</div>
+          </div>
+
+          <div class="reward-coupon" onclick="redeem('VIP Upgrade',1500)">
+            <div class="reward-coupon-points">1500 pts</div>
+            <div class="reward-coupon-text">💎 VIP Upgrade</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>&copy; 2026 BookMyShow &nbsp;|&nbsp; <a href="index.html">← Movies</a></footer>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/movies.js"></script>
+
+<script>
+(function () {
+  const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/original';
+
+  function qs(id) {
+    return document.getElementById(id);
+  }
+
+  function escHtml(str = '') {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function escAttr(str = '') {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function safeToast(msg, type = 'info', ms = 3000) {
+    if (typeof window.TOAST !== 'undefined' && window.TOAST && typeof window.TOAST.show === 'function') {
+      window.TOAST.show(msg, type, ms);
+    } else {
+      console.log('[' + type + '] ' + msg);
+      if (type === 'warn' || type === 'error') alert(msg);
+    }
+  }
+
+  function getUser() {
+    try {
+      if (typeof window.SESSION !== 'undefined' && window.SESSION && typeof window.SESSION.getUser === 'function') {
+        return window.SESSION.getUser();
+      }
+    } catch (_) {}
+    try {
+      return JSON.parse(localStorage.getItem('mz_user') || 'null');
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function setUser(user, token) {
+    if (typeof window.SESSION !== 'undefined' && window.SESSION && typeof window.SESSION.set === 'function') {
+      window.SESSION.set(user, token || localStorage.getItem('mz_token') || '');
+      return;
+    }
+    localStorage.setItem('mz_user', JSON.stringify(user));
+    if (token) localStorage.setItem('mz_token', token);
+  }
+
+  function getWishIds() {
+    try {
+      const a = JSON.parse(localStorage.getItem('mz_wish') || '[]');
+      const b = JSON.parse(localStorage.getItem('mz_wishlist') || '[]');
+      const merged = [...a, ...b];
+      return [...new Set(merged.filter(Boolean))];
+    } catch (_) {
+      try {
+        return JSON.parse(localStorage.getItem('mz_wishlist') || '[]');
+      } catch (_) {
+        return [];
+      }
+    }
+  }
+
+  function getLocalBookings() {
+    try {
+      return JSON.parse(localStorage.getItem('mz_bookings') || '[]');
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function getEventBookings() {
+    try {
+      return JSON.parse(localStorage.getItem('mz_event_bookings') || '[]');
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function getPointsFromUser(user) {
+    return parseInt(user?.loyaltyPoints || localStorage.getItem('mz_pts') || '0', 10) || 0;
+  }
+
+  function normalizePoster(url) {
+    if (!url || typeof url !== 'string') return '';
+    const src = url.trim();
+    if (!src) return '';
+    if (src.startsWith('data:')) return src;
+    if (/^https?:\/\//i.test(src)) return src;
+    if (src.startsWith('//')) return window.location.protocol + src;
+
+    if (
+      src.startsWith('/') &&
+      (src.includes('.jpg') || src.includes('.jpeg') || src.includes('.png') || src.includes('.webp'))
+    ) {
+      return TMDB_IMAGE_BASE + src;
+    }
+
+    if (src.startsWith('/')) return window.location.origin + src;
+    if (/^(uploads\/|images\/|posters\/)/i.test(src)) {
+      return window.location.origin + '/' + src.replace(/^\/+/, '');
+    }
+    return src;
+  }
+
+  function renderPosterMarkup(poster, title, bg = '#1a1a2e', fallback = '🎬') {
+    const src = normalizePoster(poster);
+    if (src) {
+      return `
+        <div class="profile-poster-wrap" style="background:${escAttr(bg)}">
+          <img
+            src="${escAttr(src)}"
+            alt="${escAttr(title || 'Poster')}"
+            onerror="this.parentNode.innerHTML='<div class=&quot;profile-poster-fallback&quot;>${escHtml(fallback)}</div>'"
+          >
+        </div>
+      `;
+    }
+
+    return `
+      <div class="profile-poster-wrap" style="background:${escAttr(bg)}">
+        <div class="profile-poster-fallback">${escHtml(fallback)}</div>
+      </div>
+    `;
+  }
+
+  function switchTab(name, el) {
+    document.querySelectorAll('.p-tab').forEach(t => t.classList.remove('on'));
+    document.querySelectorAll('.p-panel').forEach(p => p.classList.remove('show'));
+
+    if (el) el.classList.add('on');
+    const panel = qs('tab_' + name);
+    if (panel) panel.classList.add('show');
+
+    try {
+      history.replaceState(null, '', 'profile.html#' + name);
+    } catch (_) {}
+  }
+
+  function setCouponState(id, unlocked) {
+    const el = qs(id);
+    if (!el) return;
+    el.classList.remove('locked', 'unlocked');
+    el.classList.add(unlocked ? 'unlocked' : 'locked');
+  }
+
+  function updateTierClass(tier) {
+    const el = qs('memberTier');
+    if (!el) return;
+    el.classList.remove('bronze', 'silver', 'gold', 'platinum');
+
+    if (/Bronze/i.test(tier)) el.classList.add('bronze');
+    else if (/Silver/i.test(tier)) el.classList.add('silver');
+    else if (/Gold/i.test(tier)) el.classList.add('gold');
+    else if (/Platinum/i.test(tier)) el.classList.add('platinum');
+    else el.classList.add('gold');
+  }
+
+  function updateRewards(bookingsCount, points) {
+    if (qs('rewardPoints')) qs('rewardPoints').textContent = points;
+    if (qs('profPoints')) qs('profPoints').textContent = points;
+    if (qs('moviesBookedCount')) qs('moviesBookedCount').textContent = bookingsCount;
+    if (qs('pointsValue')) qs('pointsValue').textContent = '₹' + (points * 0.10).toFixed(0);
+
+    let unlocked = 0;
+    if (bookingsCount >= 10) unlocked++;
+    if (bookingsCount >= 20) unlocked++;
+    if (bookingsCount >= 30) unlocked++;
+    if (bookingsCount >= 50) unlocked++;
+    if (qs('unlockedRewardsCount')) qs('unlockedRewardsCount').textContent = unlocked;
+
+    setCouponState('milestone10', bookingsCount >= 10);
+    setCouponState('milestone20', bookingsCount >= 20);
+    setCouponState('milestone30', bookingsCount >= 30);
+    setCouponState('milestone50', bookingsCount >= 50);
+
+    let nextRewardText = '🍿 Free Popcorn at 10 movies';
+    let progress = Math.min((bookingsCount / 10) * 100, 100);
+    let tier = '⭐ Member';
+
+    if (bookingsCount >= 10 && bookingsCount < 20) {
+      nextRewardText = '🍔 Free Food Combo at 20 movies';
+      progress = Math.min(((bookingsCount - 10) / 10) * 100, 100);
+      tier = '🥉 Bronze';
+    } else if (bookingsCount >= 20 && bookingsCount < 30) {
+      nextRewardText = '🎟 Free Ticket at 30 movies';
+      progress = Math.min(((bookingsCount - 20) / 10) * 100, 100);
+      tier = '🥈 Silver';
+    } else if (bookingsCount >= 30 && bookingsCount < 50) {
+      nextRewardText = '💎 VIP Lounge at 50 movies';
+      progress = Math.min(((bookingsCount - 30) / 20) * 100, 100);
+      tier = '🥇 Gold';
+    } else if (bookingsCount >= 50) {
+      nextRewardText = '🏆 All milestones unlocked';
+      progress = 100;
+      tier = '👑 Platinum';
+    }
+
+    if (qs('nextReward')) qs('nextReward').textContent = nextRewardText;
+    if (qs('rewardProgress')) qs('rewardProgress').style.width = progress + '%';
+    if (qs('memberTier')) qs('memberTier').textContent = tier;
+    updateTierClass(tier);
+  }
+
+  function safeBookingDate(val) {
+    if (!val) return '—';
+    const d = new Date(val);
+    if (Number.isNaN(d.getTime())) return String(val);
+    return d.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
+
+  async function loadBookings() {
+    const listEl = qs('bookingsList');
+    let bookings = [];
+
+    try {
+      if (window.API && typeof window.API.get === 'function') {
+        const res = await window.API.get('/bookings/my');
+        if (res && res.success && Array.isArray(res.bookings)) {
+          bookings = res.bookings;
+        }
+      }
+    } catch (_) {}
+
+    const eventBookings = getEventBookings().map(b => ({ ...b, type: b.type || 'event', isEvent: true }));
+
+    if (!bookings.length) {
+      bookings = getLocalBookings().slice().reverse();
+    }
+
+    const merged = [...bookings, ...eventBookings].sort((a, b) => {
+      return new Date(b.bookedAt || 0) - new Date(a.bookedAt || 0);
+    });
+
+    const movieOnlyCount = merged.filter(b => (b.type || '') !== 'event').length;
+    const user = getUser();
+    updateRewards(movieOnlyCount, getPointsFromUser(user));
+
+    if (!merged.length) {
+      listEl.innerHTML = `
+        <div class="empty">
+          <div class="empty-ico">🎟</div>
+          <div class="empty-txt">No bookings yet</div>
+          <div class="empty-sub">Your booking history will appear here</div>
+          <a href="index.html" class="btn btn-red btn-sm" style="margin-top:14px;display:inline-flex">Browse Movies</a>
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = merged.map(b => {
+      if ((b.type || '') === 'event' || b.isEvent) {
+        const title = b.title || 'Event Booking';
+        const bid = b.bookingId || b._id || '—';
+        const city = b.city || '—';
+        const venue = b.venue || '—';
+        const date = b.date || '—';
+        const qty = b.qty || 1;
+        const total = b.total || 0;
+        const bookedAt = safeBookingDate(b.bookedAt);
+        const ticketId = encodeURIComponent(b._id || b.bookingId || b.id || '');
+
+        return `
+          <div class="bk-hist-card" onclick="location.href='ticket.html?id=${ticketId}'">
+            ${renderPosterMarkup('', title, '#24124a', '🎤')}
+            <div>
+              <div class="bk-hist-name">${escHtml(title)}</div>
+              <div class="bk-hist-meta">📍 ${escHtml(venue)}, ${escHtml(city)}<br>📅 ${escHtml(date)}<br>📆 Booked: ${escHtml(bookedAt)}</div>
+              <div class="bk-hist-id">🎫 ID: ${escHtml(bid)}</div>
+            </div>
+            <div class="bk-hist-right">
+              <div class="bk-hist-amt">₹${Number(total || 0)}</div>
+              <div class="bk-hist-seats">🎟 ${Number(qty || 1)} ticket(s)</div>
+              <div class="bk-hist-status">✅ Confirmed</div>
+              <div style="margin-top:5px">
+                <button class="btn btn-glass btn-sm" onclick="event.stopPropagation();location.href='ticket.html?id=${ticketId}'" style="font-size:.68rem;padding:4px 10px">View Ticket</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      const movie = b.movieId && typeof b.movieId === 'object' ? b.movieId : null;
+      const title = movie?.title || b.movieTitle || 'Unknown';
+      const poster = movie?.poster || b.moviePoster || '';
+      const bg = movie?.bg || b.movieBg || '#1a1a2e';
+      const bid = b.bookingId || b._id || '—';
+      const cinema = b.cinema || b.show?.cinema || '—';
+      const date = b.date || b.show?.date || '—';
+      const time = b.time || b.show?.time || '—';
+      const seats = Array.isArray(b.seats) ? b.seats.join(', ') : '—';
+      const total = b.totalAmount || b.total || 0;
+      const bookedAt = safeBookingDate(b.bookedAt);
+      const ticketId = encodeURIComponent(b._id || bid);
+
+      return `
+        <div class="bk-hist-card" onclick="location.href='ticket.html?id=${ticketId}'">
+          ${renderPosterMarkup(poster, title, bg, '🎬')}
+          <div>
+            <div class="bk-hist-name">${escHtml(title)}</div>
+            <div class="bk-hist-meta">📍 ${escHtml(cinema)}<br>📅 ${escHtml(date)} · ⏰ ${escHtml(time)}<br>📆 Booked: ${escHtml(bookedAt)}</div>
+            <div class="bk-hist-id">🎫 ID: ${escHtml(bid)}</div>
+          </div>
+          <div class="bk-hist-right">
+            <div class="bk-hist-amt">₹${Number(total || 0)}</div>
+            <div class="bk-hist-seats">🪑 ${escHtml(seats)}</div>
+            <div class="bk-hist-status">✅ Confirmed</div>
+            <div style="margin-top:5px">
+              <button class="btn btn-glass btn-sm" onclick="event.stopPropagation();location.href='ticket.html?id=${ticketId}'" style="font-size:.68rem;padding:4px 10px">View Ticket</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function loadWishlist() {
+    const wlEl = qs('wishlistContent');
+    const wishIds = getWishIds();
+
+    if (!wishIds.length) {
+      wlEl.innerHTML = `
+        <div class="empty">
+          <div class="empty-ico">❤️</div>
+          <div class="empty-txt">Wishlist is empty</div>
+          <div class="empty-sub">Tap the heart icon on any movie to save it</div>
+          <a href="index.html" class="btn btn-red btn-sm" style="margin-top:14px;display:inline-flex">Explore Movies</a>
+        </div>
+      `;
+      return;
+    }
+
+    let movies = [];
+
+    try {
+      if (window.API && typeof window.API.get === 'function') {
+        const res = await window.API.get('/movies?limit=200');
+        if (res && res.success && Array.isArray(res.movies)) {
+          movies = res.movies.filter(m => wishIds.includes(m._id));
+        }
+      }
+    } catch (_) {}
+
+    if (!movies.length) {
+      wlEl.innerHTML = wishIds.map(id => `
+        <div class="bk-hist-card">
+          ${renderPosterMarkup('', 'Saved Movie', '#1a1a2e', '🎬')}
+          <div>
+            <div class="bk-hist-name">Saved Movie</div>
+            <div class="bk-hist-meta">Movie ID: ${escHtml(id)}</div>
+          </div>
+          <div class="bk-hist-right">
+            <button class="btn btn-glass btn-sm" onclick="location.href='movie.html?id=${encodeURIComponent(id)}'">Open</button>
+          </div>
+        </div>
+      `).join('');
+      return;
+    }
+
+    wlEl.innerHTML = movies.map(m => `
+      <div class="bk-hist-card" onclick="location.href='movie.html?id=${encodeURIComponent(m._id)}'">
+        ${renderPosterMarkup(m.poster || '', m.title || 'Movie', m.bg || '#1a1a2e', '🎬')}
+        <div>
+          <div class="bk-hist-name">${escHtml(m.title || 'Untitled')}</div>
+          <div class="bk-hist-meta">${escHtml(Array.isArray(m.genre) ? m.genre.join(', ') : (m.genre || ''))}<br>${escHtml(Array.isArray(m.lang) ? m.lang.join(', ') : (m.lang || ''))}</div>
+        </div>
+        <div class="bk-hist-right">
+          <button class="btn btn-red btn-sm" onclick="event.stopPropagation();location.href='movie.html?id=${encodeURIComponent(m._id)}'">View</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function saveProfile() {
+    const user = getUser();
+    if (!user) return;
+
+    const updated = {
+      ...user,
+      name: qs('editName').value.trim() || user.name || 'User',
+      phone: qs('editPhone').value.trim() || user.phone || '',
+      city: qs('editCity').value || user.city || 'Mumbai'
+    };
+
+    setUser(updated);
+    localStorage.setItem('mz_city', updated.city);
+
+    qs('profAv').textContent = (updated.name || 'U').charAt(0).toUpperCase();
+    qs('profName').textContent = updated.name;
+    qs('profCity').textContent = '📍 ' + updated.city;
+
+    safeToast('Profile updated successfully', 'success');
+  }
+
+  function toggleDarkMode() {
+    const isLight = document.body.classList.toggle('light');
+    localStorage.setItem('mz_dark', String(!isLight));
+
+    const toggle = qs('darkToggle');
+    if (toggle) {
+      toggle.classList.toggle('on', !isLight);
+    }
+  }
+
+  function clearLocalBk() {
+    if (!confirm('Clear all local bookings?')) return;
+    localStorage.removeItem('mz_bookings');
+    localStorage.removeItem('mz_event_bookings');
+    safeToast('Local bookings cleared', 'success');
+    loadBookings();
+  }
+
+  function clearWL() {
+    if (!confirm('Clear wishlist?')) return;
+    localStorage.removeItem('mz_wish');
+    localStorage.removeItem('mz_wishlist');
+    safeToast('Wishlist cleared', 'success');
+    loadWishlist();
+  }
+
+  function redeem(label, pointsNeeded) {
+    const user = getUser();
+    if (!user) return;
+
+    const current = getPointsFromUser(user);
+    if (current < pointsNeeded) {
+      safeToast(`You need ${pointsNeeded - current} more points`, 'warn');
+      return;
+    }
+
+    const updatedPoints = current - pointsNeeded;
+    const updated = { ...user, loyaltyPoints: updatedPoints };
+    setUser(updated);
+    localStorage.setItem('mz_pts', String(updatedPoints));
+
+    if (qs('profPoints')) qs('profPoints').textContent = updatedPoints;
+    if (qs('rewardPoints')) qs('rewardPoints').textContent = updatedPoints;
+    if (qs('pointsValue')) qs('pointsValue').textContent = '₹' + (updatedPoints * 0.10).toFixed(0);
+
+    const movieBookingCount = document.querySelectorAll('#bookingsList .bk-hist-card').length;
+    updateRewards(movieBookingCount, updatedPoints);
+
+    safeToast(`${label} redeemed successfully!`, 'success');
+  }
+
+  function doLogout() {
+    localStorage.removeItem('mz_user');
+    localStorage.removeItem('mz_token');
+    safeToast('Logged out', 'success');
+    setTimeout(() => location.href = 'login.html', 500);
+  }
+
+  function initHashTab() {
+    const hash = (location.hash || '').replace('#', '').trim();
+    const valid = ['bookings', 'wishlist', 'settings', 'rewards'];
+    const name = valid.includes(hash) ? hash : 'bookings';
+    const tabs = document.querySelectorAll('.p-tab');
+    const idxMap = { bookings: 0, wishlist: 1, settings: 2, rewards: 3 };
+    switchTab(name, tabs[idxMap[name]]);
+  }
+
+  async function initProfilePage() {
+    if (typeof window.mountNavbar === 'function') {
+      try { window.mountNavbar('profile'); } catch (_) {}
+    }
+
+    const user = getUser();
+    if (!user) {
+      location.href = 'login.html?redirect=profile.html';
+      return;
+    }
+
+    const points = getPointsFromUser(user);
+
+    qs('profAv').textContent = user.name ? user.name[0].toUpperCase() : 'U';
+    qs('profName').textContent = user.name || 'User';
+    qs('profEmail').textContent = user.email || '—';
+    qs('profCity').textContent = `📍 ${user.city || localStorage.getItem('mz_city') || 'Mumbai'}`;
+    qs('editName').value = user.name || '';
+    qs('editPhone').value = user.phone || '';
+    qs('editCity').value = user.city || localStorage.getItem('mz_city') || 'Mumbai';
+    qs('profPoints').textContent = points;
+
+    const badges = [];
+    if (points >= 1500) badges.push('💎 VIP');
+    else if (points >= 800) badges.push('🥇 Gold');
+    else if (points >= 300) badges.push('🥈 Silver');
+    else badges.push('🥉 Bronze');
+    badges.push('🎬 Movie Buff');
+
+    qs('profBadges').innerHTML = badges.map(b => `<span class="badge">${escHtml(b)}</span>`).join('');
+
+    const shouldDark = localStorage.getItem('mz_dark');
+    if (shouldDark === 'false') {
+      document.body.classList.add('light');
+      qs('darkToggle')?.classList.remove('on');
+    } else {
+      qs('darkToggle')?.classList.add('on');
+    }
+
+    await loadBookings();
+    await loadWishlist();
+    initHashTab();
+
+    if (typeof window.hideLoader === 'function') {
+      try { window.hideLoader(); } catch (_) {}
+    } else {
+      const loader = qs('pageLoader');
+      if (loader) setTimeout(() => loader.classList.add('gone'), 300);
+    }
+  }
+
+  window.switchTab = switchTab;
+  window.saveProfile = saveProfile;
+  window.toggleDarkMode = toggleDarkMode;
+  window.clearLocalBk = clearLocalBk;
+  window.clearWL = clearWL;
+  window.redeem = redeem;
+  window.doLogout = doLogout;
+  window.safeToast = safeToast;
+
+  document.addEventListener('DOMContentLoaded', initProfilePage);
+})();
+</script>
+</body>
+</html>

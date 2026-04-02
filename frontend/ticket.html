@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Your Ticket — BookMyShow</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    .ticket-page-wrap{
+      padding:76px 0 60px;
+      min-height:100vh;
+    }
+
+    .ticket-inner{
+      max-width:540px;
+      margin:0 auto;
+      padding:32px 18px;
+    }
+
+    .success-hdr{
+      text-align:center;
+      margin-bottom:26px;
+    }
+
+    .success-ico{
+      font-size:3.6rem;
+      margin-bottom:10px;
+      animation:bounceIn .6s ease;
+    }
+
+    @keyframes bounceIn{
+      0%{transform:scale(0);opacity:0}
+      70%{transform:scale(1.12)}
+      100%{transform:scale(1);opacity:1}
+    }
+
+    .success-title{
+      font-family:var(--fu);
+      font-size:1.7rem;
+      font-weight:700;
+      color:var(--green);
+      margin-bottom:4px;
+    }
+
+    .success-sub{
+      font-size:.82rem;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .ticket-acts{
+      display:flex;
+      gap:10px;
+      margin-top:20px;
+      flex-wrap:wrap;
+    }
+
+    .exclusive-feature{
+      margin-top:14px;
+      padding:11px 14px;
+      background:rgba(168,85,247,.06);
+      border:1px solid rgba(168,85,247,.18);
+      border-radius:var(--rsm);
+    }
+
+    .ef-title{
+      font-size:.78rem;
+      font-weight:700;
+      color:var(--purple);
+      margin-bottom:5px;
+    }
+
+    .ef-body{
+      font-size:.74rem;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .ticket-card{
+      overflow:hidden;
+    }
+
+    .ticket-top{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:18px;
+      border-bottom:1px dashed var(--b1);
+    }
+
+    .ticket-poster-lg{
+      width:78px;
+      height:104px;
+      border-radius:14px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--bg2, #111);
+      color:#fff;
+      font-size:2rem;
+      flex-shrink:0;
+      box-shadow:0 10px 24px rgba(0,0,0,.22);
+    }
+
+    .ticket-poster-lg img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .ticket-title{
+      font-size:1.15rem;
+      font-weight:800;
+      line-height:1.35;
+      margin-bottom:4px;
+    }
+
+    .ticket-sub{
+      font-size:.86rem;
+      color:var(--muted);
+      margin-bottom:8px;
+      line-height:1.5;
+    }
+
+    .ticket-confirmed{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:.74rem;
+      font-weight:800;
+      color:var(--green);
+      background:rgba(34,197,94,.08);
+      border:1px solid rgba(34,197,94,.18);
+      padding:6px 10px;
+      border-radius:999px;
+    }
+
+    .ticket-perf{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 18px 0;
+    }
+
+    .perf-dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--b1);
+      flex-shrink:0;
+    }
+
+    .perf-dashes{
+      height:1px;
+      flex:1;
+      border-top:1px dashed var(--b1);
+    }
+
+    .ticket-body{
+      padding:18px;
+    }
+
+    .ticket-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px 16px;
+    }
+
+    .tf-lbl{
+      font-size:.7rem;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:4px;
+      font-weight:700;
+    }
+
+    .tf-val{
+      font-size:.93rem;
+      font-weight:700;
+      line-height:1.45;
+      word-break:break-word;
+    }
+
+    .tf-val.seats{
+      color:var(--red);
+    }
+
+    .tf-val.price{
+      color:var(--green);
+    }
+
+    .qr-section{
+      margin-top:18px;
+      padding-top:16px;
+      border-top:1px dashed var(--b1);
+      display:flex;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    #qrCode{
+      min-width:112px;
+      min-height:112px;
+      width:112px;
+      height:112px;
+      padding:8px;
+      background:#fff;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 8px 18px rgba(0,0,0,.12);
+    }
+
+    #qrCode img,
+    #qrCode canvas{
+      max-width:100%;
+      max-height:100%;
+      display:block;
+    }
+
+    .qr-bid{
+      font-weight:900;
+      letter-spacing:.06em;
+      font-size:1rem;
+      margin:4px 0 8px;
+    }
+
+    .qr-hint{
+      font-size:.75rem;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    @media (max-width:560px){
+      .ticket-inner{
+        padding:24px 14px;
+      }
+
+      .ticket-top{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .ticket-grid{
+        grid-template-columns:1fr;
+      }
+
+      .ticket-acts > *{
+        flex:1 1 calc(50% - 10px);
+        text-align:center;
+        justify-content:center;
+      }
+
+      .qr-section{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+    }
+
+    @media print{
+      body{
+        background:#fff !important;
+      }
+
+      .navbar,
+      .ticket-acts,
+      footer,
+      #pageLoader,
+      #navMount,
+      .exclusive-feature{
+        display:none !important;
+      }
+
+      .ticket-page-wrap{
+        padding:0 !important;
+      }
+
+      .ticket-inner{
+        max-width:100% !important;
+        padding:0 !important;
+      }
+
+      .ticket-card{
+        box-shadow:none !important;
+        border:1px solid #ddd !important;
+      }
+    }
+  </style>
+</head>
+
+<body id="ticketPage">
+  <div id="pageLoader">
+    <div class="ld-logo">BookMyShow</div>
+    <div class="ld-bar">
+      <div class="ld-fill"></div>
+    </div>
+  </div>
+
+  <div id="navMount"></div>
+
+  <div class="ticket-page-wrap">
+    <div class="ticket-inner">
+      <div class="success-hdr">
+        <div class="success-ico">🎉</div>
+        <h1 class="success-title">Booking Confirmed!</h1>
+        <p class="success-sub" id="ticketSubText">Your booking is locked! Enjoy your show 🍿</p>
+      </div>
+
+      <div class="ticket-card">
+        <div class="ticket-top" id="ticketPosterEl" style="background:var(--surf)">
+          <div class="ticket-poster-lg" id="tPoster" aria-label="Movie poster">🎟️</div>
+
+          <div>
+            <div class="ticket-title" id="tMovie">Loading...</div>
+            <div class="ticket-sub" id="tCinema">—</div>
+            <div class="ticket-confirmed">✅ CONFIRMED</div>
+          </div>
+        </div>
+
+        <div class="ticket-perf">
+          <div class="perf-dot"></div>
+          <div class="perf-dashes"></div>
+          <div class="perf-dot"></div>
+        </div>
+
+        <div class="ticket-body">
+          <div class="ticket-grid">
+            <div>
+              <div class="tf-lbl">Date</div>
+              <div class="tf-val" id="tDate">—</div>
+            </div>
+
+            <div>
+              <div class="tf-lbl">Time</div>
+              <div class="tf-val" id="tTime">—</div>
+            </div>
+
+            <div>
+              <div class="tf-lbl">Format / Type</div>
+              <div class="tf-val" id="tFormat">—</div>
+            </div>
+
+            <div>
+              <div class="tf-lbl">Language / City</div>
+              <div class="tf-val" id="tLang">—</div>
+            </div>
+
+            <div style="grid-column:1/-1">
+              <div class="tf-lbl">Pass / Seats</div>
+              <div class="tf-val seats" id="tSeats">—</div>
+            </div>
+
+            <div>
+              <div class="tf-lbl">Category</div>
+              <div class="tf-val" id="tSeatCat">—</div>
+            </div>
+
+            <div>
+              <div class="tf-lbl">Booked By</div>
+              <div class="tf-val" id="tUser">—</div>
+            </div>
+
+            <div>
+              <div class="tf-lbl">Amount Paid</div>
+              <div class="tf-val price" id="tAmount">—</div>
+            </div>
+
+            <div>
+              <div class="tf-lbl">Loyalty Points</div>
+              <div class="tf-val" style="color:var(--gold)" id="tPoints">—</div>
+            </div>
+
+            <div style="grid-column:1/-1">
+              <div class="tf-lbl">Food</div>
+              <div class="tf-val" id="tFood">—</div>
+            </div>
+
+            <div style="grid-column:1/-1">
+              <div class="tf-lbl">Booked At</div>
+              <div class="tf-val" style="font-size:.74rem" id="tBooked">—</div>
+            </div>
+          </div>
+
+          <div class="qr-section">
+            <div id="qrCode"></div>
+
+            <div>
+              <div class="tf-lbl">BOOKING ID</div>
+              <div class="qr-bid" id="tId">MZ000000</div>
+              <div class="qr-hint" id="qrHintText">Show this QR at the entry gate for verification</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exclusive-feature">
+        <div class="ef-title">🤖 Smart Reminder</div>
+        <div class="ef-body">
+          We’ll remind you before the show and help you reach
+          <span id="reminderCinema">your venue</span>
+          on time.
+        </div>
+      </div>
+
+      <div class="ticket-acts">
+        <button class="btn btn-red" id="downloadBtn" type="button">📥 Download Ticket</button>
+        <button class="btn btn-glass" id="shareTicketBtn" type="button">📤 Share</button>
+        <a href="profile.html#bookings" class="btn btn-glass">📋 My Bookings</a>
+        <a href="index.html" class="btn btn-outline">🏠 Home</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 BookMyShow &nbsp;|&nbsp; <a href="index.html">← Back to Home</a></footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/ticket.js"></script>
+
+  <script>
+    (function () {
+      const $ = (id) => document.getElementById(id);
+
+      function safeText(value, fallback = '—') {
+        if (value === undefined || value === null) return fallback;
+        const str = String(value).trim();
+        return str ? str : fallback;
+      }
+
+      function inr(value) {
+        const num = Number(value || 0);
+        if (!num) return '₹0';
+        return '₹' + num.toLocaleString('en-IN');
+      }
+
+      function getStoredTicket() {
+        try {
+          const latest =
+            JSON.parse(localStorage.getItem('bms_latest_ticket') || 'null') ||
+            JSON.parse(localStorage.getItem('mz_latest_ticket') || 'null') ||
+            JSON.parse(sessionStorage.getItem('bms_latest_ticket') || 'null') ||
+            JSON.parse(sessionStorage.getItem('mz_latest_ticket') || 'null');
+
+          if (latest) return latest;
+        } catch (e) {}
+
+        const params = new URLSearchParams(location.search);
+        return {
+          id: params.get('bookingId') || params.get('id') || 'MZ000000',
+          movie: params.get('movie') || params.get('title') || 'Booked Show',
+          cinema: params.get('cinema') || '—',
+          date: params.get('date') || '—',
+          time: params.get('time') || '—',
+          format: params.get('format') || params.get('type') || '2D',
+          language: params.get('language') || params.get('city') || localStorage.getItem('mz_city') || 'Mumbai',
+          seats: params.get('seats') || params.get('seat') || params.get('count') || '—',
+          category: params.get('category') || 'Standard',
+          user: params.get('user') || (() => {
+            try {
+              const u = JSON.parse(localStorage.getItem('mz_user') || 'null');
+              return u?.name || u?.fullName || 'Guest User';
+            } catch (e) {
+              return 'Guest User';
+            }
+          })(),
+          amount: params.get('amount') || 0,
+          points: params.get('points') || 0,
+          food: params.get('food') || 'No add-ons',
+          bookedAt: params.get('bookedAt') || new Date().toLocaleString('en-IN'),
+          poster: params.get('poster') || ''
+        };
+      }
+
+      function renderPoster(poster, movieName) {
+        const el = $('tPoster');
+        if (!el) return;
+
+        const url = safeText(poster, '');
+        if (url && /^https?:\/\//i.test(url)) {
+          el.innerHTML = '<img src="' + url + '" alt="' + safeText(movieName, 'Movie Poster') + '" />';
+        } else {
+          el.textContent = '🎟️';
+        }
+      }
+
+      function generateQR(text) {
+        const qrWrap = $('qrCode');
+        if (!qrWrap) return;
+
+        qrWrap.innerHTML = '';
+
+        if (typeof QRCode !== 'undefined') {
+          new QRCode(qrWrap, {
+            text: text,
+            width: 96,
+            height: 96
+          });
+        } else {
+          qrWrap.innerHTML = '<div style="font-size:.75rem;color:#111;text-align:center">QR unavailable</div>';
+        }
+      }
+
+      function fillTicket() {
+        const t = getStoredTicket();
+
+        $('tMovie').textContent = safeText(t.movie);
+        $('tCinema').textContent = safeText(t.cinema);
+        $('tDate').textContent = safeText(t.date);
+        $('tTime').textContent = safeText(t.time);
+        $('tFormat').textContent = safeText(t.format);
+        $('tLang').textContent = safeText(t.language);
+        $('tSeats').textContent = safeText(
+          Array.isArray(t.seats) ? t.seats.join(', ') : t.seats
+        );
+        $('tSeatCat').textContent = safeText(t.category);
+        $('tUser').textContent = safeText(t.user);
+        $('tAmount').textContent = inr(t.amount);
+        $('tPoints').textContent = '+' + (Number(t.points || 0).toLocaleString('en-IN')) + ' pts';
+        $('tFood').textContent = safeText(
+          Array.isArray(t.food) ? t.food.join(', ') : t.food,
+          'No add-ons'
+        );
+        $('tBooked').textContent = safeText(t.bookedAt, new Date().toLocaleString('en-IN'));
+        $('tId').textContent = safeText(t.id, 'MZ000000');
+
+        if ($('ticketSubText')) {
+          $('ticketSubText').textContent = 'Your booking is locked! Enjoy your show 🍿';
+        }
+
+        if ($('reminderCinema')) {
+          $('reminderCinema').textContent = safeText(t.cinema, 'your venue');
+        }
+
+        if ($('qrHintText')) {
+          $('qrHintText').textContent = 'Show this QR at the entry gate for verification';
+        }
+
+        renderPoster(t.poster, t.movie);
+
+        generateQR(
+          JSON.stringify({
+            bookingId: safeText(t.id, 'MZ000000'),
+            movie: safeText(t.movie),
+            cinema: safeText(t.cinema),
+            date: safeText(t.date),
+            time: safeText(t.time),
+            seats: safeText(Array.isArray(t.seats) ? t.seats.join(', ') : t.seats)
+          })
+        );
+      }
+
+      function bindActions() {
+        const dBtn = $('downloadBtn');
+        const sBtn = $('shareTicketBtn');
+
+        if (dBtn) {
+          dBtn.addEventListener('click', function () {
+            window.print();
+          });
+        }
+
+        if (sBtn) {
+          sBtn.addEventListener('click', async function () {
+            const title = $('tMovie')?.textContent || 'My Ticket';
+            const text =
+              '🎟️ Booking Confirmed!\n' +
+              'Movie/Event: ' + ($('tMovie')?.textContent || '—') + '\n' +
+              'Venue: ' + ($('tCinema')?.textContent || '—') + '\n' +
+              'Date: ' + ($('tDate')?.textContent || '—') + '\n' +
+              'Time: ' + ($('tTime')?.textContent || '—') + '\n' +
+              'Booking ID: ' + ($('tId')?.textContent || 'MZ000000');
+
+            try {
+              if (navigator.share) {
+                await navigator.share({ title, text, url: location.href });
+              } else {
+                await navigator.clipboard.writeText(text + '\n' + location.href);
+                alert('Ticket details copied to clipboard ✅');
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        fillTicket();
+        bindActions();
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Seats — BookMyShow</title>
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    .bk-page {
+      min-height: 100vh;
+      padding-top: 84px;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,.08), transparent 24%),
+        radial-gradient(circle at top right, rgba(168,85,247,.08), transparent 22%),
+        #060816;
+    }
+
+    .bk-wrap {
+      width: min(1240px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 34px;
+    }
+
+    .bk-topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .bk-title-wrap a {
+      color: var(--blue, #60a5fa);
+      text-decoration: none;
+      font-size: .78rem;
+    }
+
+    .bk-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .bk-sub {
+      color: var(--muted, #94a3b8);
+      font-size: .82rem;
+      margin-top: 4px;
+      line-height: 1.55;
+    }
+
+    .bk-timer {
+      min-width: 150px;
+      background: linear-gradient(135deg, rgba(229,9,20,.14), rgba(255,107,53,.1));
+      border: 1px solid rgba(229,9,20,.28);
+      color: #ffd3d8;
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.18);
+    }
+
+    .bk-timer-lbl {
+      font-size: .74rem;
+      color: #ffb3be;
+      margin-bottom: 4px;
+    }
+
+    .bk-timer-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: .4px;
+    }
+
+    .bk-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .bk-main-card,
+    .bk-side-card {
+      background: rgba(14,18,38,.92);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 18px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.2);
+    }
+
+    .bk-main-card {
+      padding: 16px;
+    }
+
+    .info-bar {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .info-pill {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .info-pill .k {
+      color: var(--muted, #94a3b8);
+      font-size: .73rem;
+      margin-bottom: 4px;
+    }
+
+    .info-pill .v {
+      color: var(--text, #fff);
+      font-size: .9rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .screen-wrap {
+      margin-top: 12px;
+      padding: 10px 0 14px;
+      text-align: center;
+    }
+
+    .screen-hint {
+      color: #8fa4ff;
+      font-size: .72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .screen-bar {
+      width: min(560px, 92%);
+      margin: 0 auto 26px;
+      height: 18px;
+      border-radius: 100%;
+      background: radial-gradient(ellipse at center, rgba(147,197,253,.75) 0%, rgba(147,197,253,.20) 35%, rgba(147,197,253,.02) 70%, transparent 100%);
+      filter: blur(.2px);
+      box-shadow: 0 0 36px rgba(147,197,253,.22);
+    }
+
+    .seat-legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 18px;
+      color: var(--muted, #94a3b8);
+      font-size: .74rem;
+    }
+
+    .seat-legend .lg {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .seat-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .seat-map-wrap {
+      overflow: auto;
+      padding-bottom: 10px;
+    }
+
+    .seat-map {
+      min-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .seat-row {
+      display: grid;
+      grid-template-columns: 26px repeat(14, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .row-lbl {
+      color: #8ea0d8;
+      font-weight: 700;
+      font-size: .8rem;
+      text-align: center;
+    }
+
+    .seat {
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+      font-size: .72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+      background: rgba(255,255,255,.03);
+      color: #b8c4ff;
+    }
+
+    .seat:hover {
+      transform: translateY(-1px);
+      border-color: rgba(59,130,246,.5);
+    }
+
+    .seat.available {
+      background: rgba(59,130,246,.08);
+      color: #b9c9ff;
+    }
+
+    .seat.selected {
+      background: rgba(34,197,94,.22);
+      color: #b6ffd0;
+      border-color: rgba(34,197,94,.5);
+      box-shadow: 0 0 0 1px rgba(34,197,94,.18) inset;
+    }
+
+    .seat.booked {
+      background: rgba(239,68,68,.16);
+      color: #ffb7b7;
+      border-color: rgba(239,68,68,.25);
+      cursor: not-allowed;
+      opacity: .72;
+    }
+
+    .seat.filling {
+      background: rgba(245,158,11,.16);
+      color: #ffd89a;
+      border-color: rgba(245,158,11,.28);
+      cursor: not-allowed;
+    }
+
+    .seat.bestseller {
+      background: rgba(234,179,8,.14);
+      color: #fde68a;
+      border-color: rgba(234,179,8,.3);
+    }
+
+    .bk-note-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .mini-card {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .mini-card h4 {
+      margin: 0 0 8px;
+      font-size: .86rem;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted, #94a3b8);
+      font-size: .77rem;
+      line-height: 1.6;
+    }
+
+    .mini-card button {
+      margin-top: 10px;
+    }
+
+    .crowd-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .76rem;
+      font-weight: 700;
+      margin-top: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.04);
+    }
+
+    .bk-side-card {
+      padding: 16px;
+      position: sticky;
+      top: 92px;
+    }
+
+    .sum-h {
+      font-size: .98rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .sum-movie {
+      font-size: .92rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .sum-sub {
+      color: var(--muted, #94a3b8);
+      font-size: .77rem;
+      line-height: 1.6;
+      margin-top: 6px;
+    }
+
+    .sel-seat-box {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed rgba(255,255,255,.09);
+    }
+
+    .sel-seat-title {
+      font-size: .75rem;
+      color: var(--muted, #94a3b8);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .sel-seat-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .seat-tag {
+      padding: 6px 10px;
+      background: rgba(59,130,246,.1);
+      border: 1px solid rgba(59,130,246,.2);
+      color: #c7d4ff;
+      border-radius: 999px;
+      font-size: .74rem;
+      font-weight: 700;
+    }
+
+    .bill {
+      margin-top: 14px;
+      border-top: 1px dashed rgba(255,255,255,.09);
+      padding-top: 14px;
+    }
+
+    .bill-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 0;
+      color: var(--muted, #94a3b8);
+      font-size: .82rem;
+    }
+
+    .bill-row.total {
+      color: var(--text, #fff);
+      font-size: .96rem;
+      font-weight: 800;
+      padding-top: 10px;
+    }
+
+    .btn-pay {
+      width: 100%;
+      margin-top: 14px;
+    }
+
+    .help-note {
+      margin-top: 10px;
+      text-align: center;
+      color: var(--muted, #94a3b8);
+      font-size: .72rem;
+      line-height: 1.5;
+    }
+
+    .loyalty-box {
+      margin-top: 12px;
+      border: 1px solid rgba(234,179,8,.22);
+      background: rgba(234,179,8,.06);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #f7e39b;
+      font-size: .74rem;
+      text-align: center;
+    }
+
+    .food-po-section {
+      background: #0d1117;
+      border: 1px solid rgba(229,9,20,.2);
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .food-po-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .food-cards-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+      margin-top: 14px;
+    }
+
+    .food-card-item {
+      background: #161b22;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all .25s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .food-card-item:hover {
+      transform: translateY(-5px);
+      border-color: rgba(229,9,20,.4);
+      box-shadow: 0 10px 28px rgba(0,0,0,.6);
+    }
+
+    .food-card-img {
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      background: linear-gradient(135deg,#1a1a2e,#16213e);
+    }
+
+    .food-popular-tag {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: #e50914;
+      color: #fff;
+      font-size: .58rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .food-card-body {
+      padding: 9px;
+    }
+
+    .food-card-name {
+      font-size: .8rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .food-card-desc {
+      font-size: .66rem;
+      color: #888;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .food-card-price {
+      font-size: .98rem;
+      font-weight: 700;
+      color: #e5b80b;
+      margin-bottom: 7px;
+    }
+
+    .food-card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+    }
+
+    .food-qty-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,.06);
+      border-radius: 4px;
+      padding: 3px 6px;
+    }
+
+    .food-qty-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
+      background: rgba(255,255,255,.1);
+      border: none;
+      color: #fff;
+      font-size: .9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+    }
+
+    .food-qty-btn:hover {
+      background: #e50914;
+    }
+
+    .food-qty-num {
+      font-weight: 700;
+      font-size: .92rem;
+      min-width: 15px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .food-add-btn {
+      background: #e50914;
+      color: #fff;
+      border: none;
+      padding: 4px 11px;
+      border-radius: 4px;
+      font-size: .74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .food-add-btn:hover {
+      background: #b81d24;
+    }
+
+    .food-add-btn.added {
+      background: #46d369;
+    }
+
+    .compat-hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .bk-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bk-side-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .info-bar,
+      .bk-note-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .seat-row {
+        grid-template-columns: 22px repeat(14, 1fr);
+        gap: 6px;
+      }
+
+      .seat {
+        height: 28px;
+        font-size: .66rem;
+      }
+
+      .bk-wrap {
+        width: min(1240px, calc(100% - 18px));
+      }
+    }
+  </style>
+</head>
+<body id="bookingPage">
+  <div id="pageLoader">
+    <div class="ld-logo">BookMyShow</div>
+    <div class="ld-bar"><div class="ld-fill"></div></div>
+  </div>
+
+  <div id="navMount"></div>
+
+  <div class="bk-page">
+    <div class="bk-wrap">
+      <div class="bk-topbar">
+        <div class="bk-title-wrap">
+          <a href="javascript:history.back()">← Back</a>
+          <div class="bk-title">Select Seats</div>
+          <div class="bk-sub" id="bookingMeta">Loading...</div>
+          <div class="compat-hidden" id="bkHeaderMeta">Loading...</div>
+        </div>
+
+        <div class="bk-timer">
+          <div class="bk-timer-lbl">Complete booking before seats are released</div>
+          <div class="bk-timer-val" id="holdTimer">05:00</div>
+          <div class="compat-hidden" id="cdTime">05:00</div>
+        </div>
+      </div>
+
+      <div class="bk-grid">
+        <div class="bk-main-card">
+          <div class="info-bar">
+            <div class="info-pill">
+              <div class="k">Movie</div>
+              <div class="v" id="movieTitle">Loading...</div>
+            </div>
+            <div class="info-pill">
+              <div class="k">Cinema · Show</div>
+              <div class="v" id="cinemaInfo">Loading...</div>
+            </div>
+          </div>
+
+          <div class="mini-card" style="margin-bottom:12px">
+            <h4>📊 Crowd level</h4>
+            <p id="crowdInfo">Checking crowd level...</p>
+            <div class="crowd-pill" id="crowdPill">⏳ Calculating...</div>
+            <div class="compat-hidden" id="crowdLevel">Checking crowd level...</div>
+          </div>
+
+          <div class="screen-wrap">
+            <div class="screen-hint">All Eyes This Way — Screen</div>
+            <div class="screen-bar"></div>
+          </div>
+
+          <div class="seat-legend">
+            <div class="lg"><span class="seat-dot" style="background:rgba(59,130,246,.08)"></span>Available</div>
+            <div class="lg"><span class="seat-dot" style="background:rgba(34,197,94,.22)"></span>Selected</div>
+            <div class="lg"><span class="seat-dot" style="background:rgba(239,68,68,.16)"></span>Booked</div>
+            <div class="lg"><span class="seat-dot" style="background:rgba(245,158,11,.16)"></span>Being Booked</div>
+            <div class="lg"><span class="seat-dot" style="background:rgba(234,179,8,.14)"></span>Bestseller</div>
+          </div>
+
+          <div class="seat-map-wrap">
+            <div class="seat-map" id="seatMap">
+              <div style="text-align:center;color:var(--muted, #94a3b8);padding:24px 0">Loading seats...</div>
+            </div>
+          </div>
+
+          <div class="compat-hidden" id="seatGrid">
+            <div style="text-align:center;padding:30px;color:var(--muted, #94a3b8)">Loading seats...</div>
+          </div>
+
+          <div class="food-po-section">
+            <div class="food-po-title">
+              🍿 Add Food & Beverages
+              <span style="font-size:.68rem;font-weight:400;color:#888">Skip the queue!</span>
+            </div>
+
+            <p id="foodNote">Pre-order food with your ticket</p>
+
+            <div class="food-cards-wrap" id="foodCardsGrid"></div>
+
+            <div id="foodCartSummary" style="display:none;background:#161b22;border:1px solid rgba(229,9,20,.2);border-radius:10px;padding:11px;margin-top:6px">
+              <div style="font-size:.82rem;font-weight:700;margin-bottom:7px">🛒 Your Food Order</div>
+              <div id="foodCartItems"></div>
+              <div style="border-top:1px solid rgba(255,255,255,.07);margin-top:7px;padding-top:7px;display:flex;justify-content:space-between;font-weight:700">
+                <span style="color:#888;font-size:.82rem">Food Total</span>
+                <span style="color:#e5b80b" id="foodTotalDisplay">₹0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bk-note-grid">
+            <div class="mini-card">
+              <h4>🍿 Food Pre-Order <span style="font-size:.7rem;color:var(--muted, #94a3b8)">(skip long queues at the counter)</span></h4>
+              <p>Choose snacks, drinks and combos before payment for a smoother check-in experience.</p>
+            </div>
+
+            <div class="mini-card" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.14)">
+              <h4>💸 Split Bill with Friends</h4>
+              <p>Booking for a group? Send payment links to your friends!</p>
+              <button class="btn btn-glass btn-sm" id="splitBtn" type="button">Generate Split Payment Links</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-side-card">
+          <div class="sum-h">Booking Summary</div>
+
+          <div class="sum-movie" id="sumMovieTitle">Loading...</div>
+          <div class="sum-sub" id="sumMovieMeta">Loading...</div>
+
+          <div class="compat-hidden" id="bkName">Loading...</div>
+          <div class="compat-hidden" id="bkMeta">Loading...</div>
+          <div class="compat-hidden" id="bkPoster">🎬</div>
+
+          <div class="sel-seat-box">
+            <div class="sel-seat-title">Selected Seats</div>
+            <div class="sel-seat-tags" id="selectedSeatsBox">
+              <span style="color:var(--muted, #94a3b8);font-size:.76rem">No seats selected yet</span>
+            </div>
+          </div>
+
+          <div class="compat-hidden" id="selList">
+            <div class="no-seats">No seats selected yet</div>
+          </div>
+
+          <div class="bill">
+            <div class="bill-row"><span>Subtotal</span><strong id="billSubtotal">₹0</strong></div>
+            <div class="bill-row"><span>Food & Beverages</span><strong id="billFood">₹0</strong></div>
+            <div class="bill-row"><span>Convenience Fee (4%)</span><strong id="billFee">₹0</strong></div>
+            <div class="bill-row total"><span>Total Amount</span><strong id="billTotal">₹0</strong></div>
+          </div>
+
+          <div class="compat-hidden" id="panelBase">₹0</div>
+          <div class="compat-hidden" id="panelFood">₹0</div>
+          <div class="compat-hidden" id="panelConv">₹0</div>
+          <div class="compat-hidden" id="panelGrand">₹0</div>
+
+          <button class="btn btn-red btn-pay" id="payBtn" type="button" disabled>Proceed to Payment →</button>
+          <button class="compat-hidden" id="proceedBtn" type="button" disabled>Proceed to Payment →</button>
+
+          <div class="help-note">Max 10 seats per booking</div>
+          <div class="loyalty-box" id="loyaltyHint">🏆 Book now and earn loyalty points!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 BookMyShow</footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/features.js"></script>
+  <script src="js/movies.js"></script>
+  <script src="js/booking.js"></script>
+
+  <script>
+    (function () {
+      function safeToast(message, type = 'info', ms = 3000) {
+        if (typeof window.TOAST !== 'undefined' && window.TOAST && typeof window.TOAST.show === 'function') {
+          window.TOAST.show(message, type, ms);
+        } else {
+          console.log(type.toUpperCase() + ': ' + message);
+        }
+      }
+
+      function syncText(sourceId, targetIds) {
+        const source = document.getElementById(sourceId);
+        if (!source) return;
+
+        const update = () => {
+          targetIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = source.textContent;
+          });
+        };
+
+        update();
+
+        const obs = new MutationObserver(update);
+        obs.observe(source, {
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+      }
+
+      const syncMap = {
+        bookingMeta: ['bkHeaderMeta'],
+        holdTimer: ['cdTime'],
+        sumMovieTitle: ['bkName'],
+        sumMovieMeta: ['bkMeta'],
+        billSubtotal: ['panelBase'],
+        billFood: ['panelFood'],
+        billFee: ['panelConv'],
+        billTotal: ['panelGrand']
+      };
+
+      Object.keys(syncMap).forEach(id => syncText(id, syncMap[id]));
+
+      const payBtn = document.getElementById('payBtn');
+      const proceedBtn = document.getElementById('proceedBtn');
+
+      if (payBtn && proceedBtn) {
+        const syncDisabled = () => {
+          payBtn.disabled = !!proceedBtn.disabled;
+        };
+
+        syncDisabled();
+
+        const obs = new MutationObserver(syncDisabled);
+        obs.observe(proceedBtn, {
+          attributes: true,
+          attributeFilter: ['disabled']
+        });
+
+        payBtn.addEventListener('click', function () {
+          if (proceedBtn.disabled) {
+            safeToast('Please select seat(s) first', 'warn');
+            return;
+          }
+
+          if (typeof proceedBtn.onclick === 'function') {
+            proceedBtn.onclick();
+          } else {
+            proceedBtn.click();
+          }
+        });
+      }
+
+      const splitBtn = document.getElementById('splitBtn');
+      if (splitBtn) {
+        splitBtn.addEventListener('click', function () {
+          if (typeof window.openSplitBill === 'function') {
+            window.openSplitBill();
+          } else {
+            safeToast('Split bill feature not ready', 'warn');
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

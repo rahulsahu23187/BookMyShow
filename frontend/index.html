@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BookMyShow — Book Movies, Events & More in India</title>
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    .home-sec,
+    .section {
+      padding: 0 0 40px;
+    }
+
+    #searchResultsSec,
+    #searchResultsSection {
+      display: none;
+      padding: 24px 0;
+    }
+
+    .banner-loading {
+      text-align: center;
+      color: var(--mt);
+    }
+
+    .banner-loading .ld-logo {
+      opacity: 0.35;
+    }
+
+    .img-fallback {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: linear-gradient(135deg, #1a1a1a, #2a0b0b);
+    }
+
+    .poster-fallback-bg {
+      background:
+        radial-gradient(circle at top right, rgba(229,9,20,.20), transparent 25%),
+        linear-gradient(135deg, #180909, #080808 65%);
+    }
+  </style>
+</head>
+<body id="homePage">
+
+  <!-- PAGE LOADER -->
+  <div id="pageLoader">
+    <div class="ld-logo">BookMyShow</div>
+    <div class="ld-bar">
+      <div class="ld-fill"></div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <div id="navMount"></div>
+
+  <!-- BANNER -->
+  <div class="banner-wrap" id="bannerWrap">
+    <div class="banner-slide poster-fallback-bg">
+      <div class="banner-overlay"></div>
+      <div class="banner-content banner-loading">
+        <div class="ld-logo" style="opacity:.4;font-size:2rem">Loading...</div>
+      </div>
+    </div>
+
+    <div class="banner-arrow left" onclick="jumpBannerSafe(-1)">‹</div>
+    <div class="banner-arrow right" onclick="jumpBannerSafe(1)">›</div>
+    <div class="banner-dots" id="bannerDots"></div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-num">50M+</div>
+        <div class="stat-lbl">Happy Users</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5000+</div>
+        <div class="stat-lbl">Cinemas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100+</div>
+        <div class="stat-lbl">Cities</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">₹199</div>
+        <div class="stat-lbl">Lowest Ticket</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY PILLS -->
+  <div style="display:flex;gap:9px;overflow-x:auto;padding:14px 4%;border-bottom:1px solid rgba(255,255,255,.08)">
+    <div class="f-chip on cat-pill" data-genre="all">🎬 All</div>
+    <div class="f-chip cat-pill" data-genre="Action">💥 Action</div>
+    <div class="f-chip cat-pill" data-genre="Thriller">🔍 Thriller</div>
+    <div class="f-chip cat-pill" data-genre="Horror">👻 Horror</div>
+    <div class="f-chip cat-pill" data-genre="Comedy">😂 Comedy</div>
+    <div class="f-chip cat-pill" data-genre="Sci-Fi">🚀 Sci-Fi</div>
+    <div class="f-chip cat-pill" data-genre="Drama">🎭 Drama</div>
+    <div class="f-chip cat-pill" data-genre="Historical">🏛️ Historical</div>
+    <div class="f-chip cat-pill" data-genre="Crime">🔫 Crime</div>
+    <div class="f-chip cat-pill" data-genre="War">⚔️ War</div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-inner">
+      <span style="font-size:.75rem;color:var(--mt);font-weight:600">FILTER:</span>
+
+      <select class="f-select" id="fGenre">
+        <option value="">All Genres</option>
+        <option>Action</option>
+        <option>Thriller</option>
+        <option>Drama</option>
+        <option>Comedy</option>
+        <option>Horror</option>
+        <option>Sci-Fi</option>
+        <option>Crime</option>
+        <option>War</option>
+        <option>Historical</option>
+        <option>Mythology</option>
+        <option>Sports</option>
+        <option>Biographical</option>
+      </select>
+
+      <select class="f-select" id="fRating">
+        <option value="">Any Rating</option>
+        <option value="9">9+ ⭐ Exceptional</option>
+        <option value="8.5">8.5+ ⭐ Excellent</option>
+        <option value="8">8+ ⭐ Great</option>
+        <option value="7">7+ ⭐ Good</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="padding:0 0 80px">
+
+    <!-- Search results -->
+    <div id="searchResultsSec" style="display:none;padding:30px 4% 0">
+      <div class="sec-head">
+        <h2 class="sec-title">
+          🔍 Results for
+          <span id="srQuery" style="color:var(--red)"></span>
+        </h2>
+        <span id="srCount" style="font-size:.8rem;color:var(--mt)"></span>
+      </div>
+      <div class="movies-grid" id="srGrid"></div>
+    </div>
+
+    <!-- fallback ids for compatibility -->
+    <div id="searchResultsSection" style="display:none;padding:30px 4% 0">
+      <div class="sec-head">
+        <h2 class="sec-title">
+          🔍 Results for
+          <span id="searchQuery" style="color:var(--red)"></span>
+        </h2>
+        <span id="searchCount" style="font-size:.8rem;color:var(--mt)"></span>
+      </div>
+      <div class="movies-grid" id="searchGrid"></div>
+    </div>
+
+    <div id="mainSecs">
+      <div id="mainSections">
+
+        <!-- AI Mood Finder -->
+        <div style="padding:24px 4% 0">
+          <div class="mood-strip">
+            <div class="mood-title">
+              🤖 AI Mood Finder
+              <span style="font-size:.7rem;font-weight:400;color:var(--mt);margin-left:6px;background:rgba(168,85,247,.15);padding:2px 8px;border-radius:10px;color:var(--purple)">
+                Exclusive
+              </span>
+            </div>
+
+            <div class="mood-chips">
+              <div class="mood-chip" data-mood="😊 Happy">😊 Happy</div>
+              <div class="mood-chip" data-mood="😢 Emotional">😢 Emotional</div>
+              <div class="mood-chip" data-mood="😱 Thrilled">😱 Thrilled</div>
+              <div class="mood-chip" data-mood="💪 Pumped">💪 Pumped</div>
+              <div class="mood-chip" data-mood="🚀 Curious">🚀 Curious</div>
+              <div class="mood-chip" data-mood="❤️ Romantic">❤️ Romantic</div>
+              <div class="mood-chip" data-mood="😤 Intense">😤 Intense</div>
+              <div class="mood-chip" data-mood="🧘 Calm">🧘 Calm</div>
+            </div>
+          </div>
+
+          <div class="promo-strip" onclick="location.href='signup.html'">
+            <div class="promo-ico">🎁</div>
+            <div class="promo-txt">
+              <strong>Sign up & get ₹100 off</strong> your first booking! Use code
+              <strong>WELCOME100</strong> at checkout.
+            </div>
+            <div class="promo-arrow">→</div>
+          </div>
+        </div>
+
+        <!-- RECOMMENDED -->
+        <div style="padding:28px 0 0" class="home-sec">
+          <div style="padding:0 4%;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px" class="sec-head">
+            <h2 class="sec-title">✨ Recommended For You</h2>
+            <a href="search.html" class="sec-all">See All →</a>
+          </div>
+          <div class="movies-grid" id="recGrid" style="padding:0 4%">
+            <div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--mt)">
+              Loading movies...
+            </div>
+          </div>
+        </div>
+
+        <!-- TRENDING -->
+        <div style="padding:32px 0 0" class="home-sec">
+          <div style="padding:0 4%;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px" class="sec-head">
+            <h2 class="sec-title">🔥 Trending Now</h2>
+            <a href="search.html?filter=trending" class="sec-all">See All →</a>
+          </div>
+          <div class="card-row" id="trendRow"></div>
+        </div>
+
+        <!-- NOW SHOWING -->
+        <div style="padding:32px 0 0" class="home-sec">
+          <div style="padding:0 4%;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px" class="sec-head">
+            <h2 class="sec-title">🎬 Now Showing</h2>
+            <a href="search.html?filter=now" class="sec-all">See All →</a>
+          </div>
+          <div class="movies-grid" id="nowGrid" style="padding:0 4%"></div>
+        </div>
+
+        <!-- POPULAR -->
+        <div style="padding:32px 0 0" class="home-sec">
+          <div style="padding:0 4%;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px" class="sec-head">
+            <h2 class="sec-title">⭐ Popular Movies</h2>
+            <a href="search.html?filter=popular" class="sec-all">See All →</a>
+          </div>
+          <div class="movies-grid" id="popGrid" style="padding:0 4%"></div>
+        </div>
+
+        <!-- COMING SOON -->
+        <div style="padding:32px 0 0" class="home-sec">
+          <div style="padding:0 4%;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px" class="sec-head">
+            <h2 class="sec-title">📅 Coming Soon</h2>
+            <a href="search.html?filter=upcoming" class="sec-all">See All →</a>
+          </div>
+          <div class="card-row" id="upcomRow"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 BookMyShow &nbsp;|&nbsp;
+    <a href="events.html">Events</a> ·
+    <a href="profile.html">Profile</a> ·
+    <a href="login.html">Login</a>
+    &nbsp;|&nbsp; Made with ❤️ in India
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/features.js"></script>
+  <script src="js/movies.js"></script>
+
+  <script>
+    /* ===============================
+       SAFE NAVBAR INIT
+    =============================== */
+    if (typeof mountNavbar === 'function') {
+      mountNavbar('home');
+    }
+
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.navbar');
+      if (nav) nav.classList.toggle('scrolled', window.scrollY > 80);
+    });
+
+    if (typeof initNavSearch === 'function') {
+      setTimeout(() => initNavSearch(), 50);
+    }
+
+    /* ===============================
+       IMAGE FIX
+       TMDB base URL used here:
+       https://image.tmdb.org/t/p/original
+    =============================== */
+    const TMDB_BASE = 'https://image.tmdb.org/t/p/original';
+    const FALLBACK_POSTER =
+      "data:image/svg+xml;utf8," +
+      encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1a0000"/>
+              <stop offset="100%" stop-color="#111111"/>
+            </linearGradient>
+          </defs>
+          <rect width="600" height="900" fill="url(#g)"/>
+          <circle cx="470" cy="140" r="90" fill="rgba(229,9,20,.22)"/>
+          <text x="50%" y="44%" text-anchor="middle" fill="#ffffff" font-size="90" font-family="Arial">🎬</text>
+          <text x="50%" y="54%" text-anchor="middle" fill="#ff5c67" font-size="34" font-family="Arial">BookMyShow</text>
+          <text x="50%" y="60%" text-anchor="middle" fill="#dddddd" font-size="24" font-family="Arial">Poster Not Available</text>
+        </svg>
+      `);
+
+    function normalizePoster(url) {
+      if (!url || typeof url !== 'string') return FALLBACK_POSTER;
+
+      let src = url.trim();
+
+      if (!src) return FALLBACK_POSTER;
+
+      if (src.startsWith('data:')) return src;
+
+      if (src.startsWith('http://') || src.startsWith('https://')) return src;
+
+      if (src.startsWith('//')) return window.location.protocol + src;
+
+      /* TMDB path fix */
+      if (src.startsWith('/')) {
+        if (
+          src.includes('.jpg') ||
+          src.includes('.jpeg') ||
+          src.includes('.png') ||
+          src.includes('.webp')
+        ) {
+          return TMDB_BASE + src;
+        }
+        return window.location.origin + src;
+      }
+
+      if (
+        src.startsWith('uploads/') ||
+        src.startsWith('images/') ||
+        src.startsWith('posters/')
+      ) {
+        return window.location.origin + '/' + src;
+      }
+
+      return src;
+    }
+
+    function setFallbackImage(img) {
+      if (!img) return;
+      img.src = FALLBACK_POSTER;
+      img.classList.add('img-fallback');
+      img.onerror = null;
+    }
+
+    function fixAllImages(root = document) {
+      root.querySelectorAll('img').forEach(img => {
+        const raw = img.getAttribute('src') || '';
+        const fixed = normalizePoster(raw);
+        if (raw !== fixed) img.src = fixed;
+
+        if (!img.dataset.fallbackBound) {
+          img.dataset.fallbackBound = '1';
+          img.addEventListener('error', () => setFallbackImage(img));
+        }
+      });
+    }
+
+    function fixBannerBackgrounds(root = document) {
+      root.querySelectorAll('.banner-slide').forEach(slide => {
+        const bg = slide.style.backgroundImage || '';
+        if (!bg || bg === 'none') {
+          slide.classList.add('poster-fallback-bg');
+          return;
+        }
+
+        const match = bg.match(/url\((['"]?)(.*?)\1\)/);
+        if (!match || !match[2]) {
+          slide.classList.add('poster-fallback-bg');
+          return;
+        }
+
+        const fixed = normalizePoster(match[2]);
+        slide.style.backgroundImage = `url("${fixed}")`;
+      });
+    }
+
+    /* make safe banner arrow */
+    function jumpBannerSafe(step) {
+      if (typeof window.jumpBanner === 'function' && typeof window.banIdx !== 'undefined') {
+        window.jumpBanner(window.banIdx + step);
+      }
+    }
+
+    /* observe DOM because cards/banner are rendered by JS */
+    const uiObserver = new MutationObserver(() => {
+      fixAllImages(document);
+      fixBannerBackgrounds(document);
+    });
+
+    uiObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fixAllImages(document);
+      fixBannerBackgrounds(document);
+    });
+
+    window.addEventListener('load', () => {
+      fixAllImages(document);
+      fixBannerBackgrounds(document);
+    });
+  </script>
+</body>
+</html>

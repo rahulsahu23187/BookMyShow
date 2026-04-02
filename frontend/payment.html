@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment — BookMyShow</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .pay-page{
+      min-height:100vh;
+      padding-top:84px;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,.08), transparent 24%),
+        radial-gradient(circle at top right, rgba(168,85,247,.08), transparent 22%),
+        #060816;
+    }
+    .pay-wrap{
+      width:min(1120px, calc(100% - 28px));
+      margin:0 auto;
+      padding:20px 0 40px;
+    }
+    .pay-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 340px;
+      gap:16px;
+    }
+    .pay-card{
+      background:rgba(14,18,38,.92);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:18px;
+      box-shadow:0 12px 34px rgba(0,0,0,.2);
+      padding:18px;
+    }
+    .pay-h{font-size:1.06rem;font-weight:800;margin-bottom:12px}
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .f{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom:12px;
+    }
+    .f label{
+      font-size:.78rem;
+      color:var(--muted, #94a3b8);
+      font-weight:600;
+    }
+    .f input,.f select{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--text, #fff);
+      border-radius:12px;
+      padding:12px 14px;
+      outline:none;
+    }
+    .f input::placeholder{color:#94a3b8}
+    .ticket-card{
+      margin-top:16px;
+      padding:16px;
+      border:1px dashed rgba(59,130,246,.25);
+      border-radius:16px;
+      background:rgba(59,130,246,.05);
+    }
+    .ticket-chip{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(59,130,246,.10);
+      border:1px solid rgba(59,130,246,.2);
+      color:#c7d4ff;
+      font-size:.74rem;
+      font-weight:700;
+      margin:0 6px 6px 0;
+    }
+    .sum-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:6px 0;
+      color:var(--muted, #94a3b8);
+      font-size:.84rem;
+    }
+    .sum-row.total{
+      color:var(--text, #fff);
+      font-size:.98rem;
+      font-weight:800;
+      border-top:1px dashed rgba(255,255,255,.08);
+      margin-top:8px;
+      padding-top:12px;
+    }
+    .success-note{
+      margin-top:10px;
+      font-size:.78rem;
+      color:#86efac;
+      display:none;
+    }
+    @media (max-width:960px){
+      .pay-grid{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body id="paymentPage">
+  <div id="pageLoader">
+    <div class="ld-logo">BookMyShow</div>
+    <div class="ld-bar"><div class="ld-fill"></div></div>
+  </div>
+
+  <div id="navMount"></div>
+
+  <div class="pay-page">
+    <div class="pay-wrap">
+      <div class="pay-grid">
+        <div class="pay-card">
+          <div class="pay-h">💳 Payment</div>
+
+          <div class="form-grid">
+            <div class="f">
+              <label>Card Holder Name</label>
+              <input type="text" id="cardName" placeholder="Rahul Sahu">
+            </div>
+            <div class="f">
+              <label>Payment Method</label>
+              <select id="payMethod">
+                <option value="card">Credit / Debit Card</option>
+                <option value="upi">UPI</option>
+                <option value="wallet">Wallet</option>
+              </select>
+            </div>
+            <div class="f">
+              <label>Card Number / UPI ID</label>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+            </div>
+            <div class="f">
+              <label>Email</label>
+              <input type="email" id="payEmail" placeholder="rahul@example.com">
+            </div>
+            <div class="f">
+              <label>Expiry</label>
+              <input type="text" id="cardExpiry" placeholder="12/28">
+            </div>
+            <div class="f">
+              <label>CVV</label>
+              <input type="password" id="cardCvv" placeholder="123">
+            </div>
+          </div>
+
+          <button class="btn btn-red btn-full" id="confirmPayBtn">Confirm Payment</button>
+          <div class="success-note" id="successNote">Payment successful. Redirecting to ticket page...</div>
+
+          <div class="ticket-card" id="ticketPreview" style="display:none">
+            <div class="pay-h" style="margin-bottom:10px">🎟 Ticket Generated</div>
+            <div id="ticketMovie" style="font-size:1rem;font-weight:800"></div>
+            <div id="ticketMeta" style="color:var(--muted, #94a3b8);font-size:.84rem;margin-top:6px"></div>
+            <div id="ticketSeats" style="margin-top:10px"></div>
+            <div style="margin-top:10px;font-size:.82rem;color:var(--muted, #94a3b8)">Ticket ID: <span id="ticketId"></span></div>
+          </div>
+        </div>
+
+        <div class="pay-card">
+          <div class="pay-h">Booking Summary</div>
+          <div style="font-size:.95rem;font-weight:800" id="sumMovie">Loading...</div>
+          <div style="font-size:.8rem;color:var(--muted, #94a3b8);line-height:1.6;margin-top:6px" id="sumMeta">Loading...</div>
+
+          <div style="margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.08)">
+            <div style="font-size:.76rem;color:var(--muted, #94a3b8);margin-bottom:8px;text-transform:uppercase">Seats</div>
+            <div id="sumSeats"></div>
+          </div>
+
+          <div style="margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.08)">
+            <div class="sum-row"><span>Subtotal</span><strong id="sumBase">₹0</strong></div>
+            <div class="sum-row"><span>Food & Beverages</span><strong id="sumFood">₹0</strong></div>
+            <div class="sum-row"><span>Convenience Fee</span><strong id="sumConv">₹0</strong></div>
+            <div class="sum-row total"><span>Total Amount</span><strong id="sumTotal">₹0</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 BookMyShow</footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/payment.js"></script>
+</body>
+</html>
