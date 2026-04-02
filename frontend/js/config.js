@@ -1,10 +1,9 @@
-// js/config.js
-
 const API_BASE =
   window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000/api'
-    : 'https://YOUR-BACKEND-NAME.onrender.com/api';
+    : 'https://bookmyshow-backend-g9hy.onrender.com/api';
+
 const API = {
   async req(method, endpoint, data = null, options = {}) {
     const token = localStorage.getItem('mz_token');
@@ -28,7 +27,6 @@ const API = {
 
     let url = API_BASE + endpoint;
 
-    // optional query params support
     if (options.params && typeof options.params === 'object') {
       const qs = new URLSearchParams();
       Object.entries(options.params).forEach(([key, value]) => {
@@ -110,7 +108,6 @@ const API = {
         payload?.details ||
         `Request failed with status ${res.status}`;
 
-      // only clear on auth failure, not on 500
       if (res.status === 401 || res.status === 403) {
         SESSION.clear();
       }
@@ -194,8 +191,6 @@ const SESSION = {
       return user;
     } catch (err) {
       console.warn('SESSION.syncMe failed:', err.message);
-
-      // invalid token already cleared in API.req on 401/403
       return null;
     }
   }
@@ -242,7 +237,6 @@ const TOAST = {
   }
 };
 
-// theme apply
 (function applySavedTheme() {
   const apply = () => {
     if (!document.body) return;
@@ -261,7 +255,6 @@ const TOAST = {
   }
 })();
 
-// optional helper: safe startup auth sync
 document.addEventListener('DOMContentLoaded', async () => {
   if (SESSION.getToken() && !SESSION.getUser()) {
     await SESSION.syncMe();
