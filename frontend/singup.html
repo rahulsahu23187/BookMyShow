@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Account — BookMyShow</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="pageLoader">
+    <div class="ld-logo">BookMyShow</div>
+    <div class="ld-bar">
+      <div class="ld-fill"></div>
+    </div>
+  </div>
+
+  <div id="navMount"></div>
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div style="text-align:center; margin-bottom:22px;">
+        <div class="auth-logo-text">BookMyShow</div>
+      </div>
+
+      <h1 class="auth-h1">Create Account 🎬</h1>
+      <p class="auth-sub">Join millions of movie lovers across India</p>
+
+      <form id="signupForm" novalidate>
+        <div class="fg">
+          <label class="fl" for="sName">FULL NAME</label>
+          <input type="text" id="sName" class="fi" placeholder="Your full name" autocomplete="name">
+          <div class="fe" id="eN"></div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="sEmail">EMAIL ADDRESS</label>
+          <input type="email" id="sEmail" class="fi" placeholder="you@example.com" autocomplete="email">
+          <div class="fe" id="eE"></div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="sPhone">PHONE (optional)</label>
+          <input type="tel" id="sPhone" class="fi" placeholder="+91 9876543210">
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="sPass">PASSWORD</label>
+          <div class="input-ico-wrap">
+            <input type="password" id="sPass" class="fi" placeholder="Min 6 characters" autocomplete="new-password" style="padding-right:40px">
+            <button type="button" class="input-ico" data-eye="sPass">👁️</button>
+          </div>
+          <div class="str-bar">
+            <div class="str-fill" id="strFill"></div>
+          </div>
+          <div class="str-txt" id="strTxt"></div>
+          <div class="fe" id="eP"></div>
+        </div>
+
+        <div class="fg">
+          <label class="fl" for="sConfirm">CONFIRM PASSWORD</label>
+          <div class="input-ico-wrap">
+            <input type="password" id="sConfirm" class="fi" placeholder="Re-enter password" autocomplete="new-password" style="padding-right:40px">
+            <button type="button" class="input-ico" data-eye="sConfirm">👁️</button>
+          </div>
+          <div class="fe" id="eC"></div>
+        </div>
+
+        <div style="margin-bottom:16px">
+          <label style="display:flex; align-items:flex-start; gap:8px; font-size:.78rem; color:var(--mt); cursor:pointer">
+            <input type="checkbox" id="sAgree" style="accent-color:var(--red); margin-top:2px">
+            I agree to the
+            <a href="#" style="color:var(--red); margin-left:3px">Terms</a>
+            &amp;
+            <a href="#" style="color:var(--red)">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-red btn-full btn-lg">Create Account</button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/features.js"></script>
+  <script>
+    mountNavbar('');
+  </script>
+</body>
+</html>

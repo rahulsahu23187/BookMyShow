@@ -48,12 +48,15 @@
           <button type="button" class="f-chip city-chip" onclick="filterEvents('Delhi',this)">🕌 Delhi</button>
           <button type="button" class="f-chip city-chip" onclick="filterEvents('Bengaluru',this)">🌿 Bengaluru</button>
           <button type="button" class="f-chip city-chip" onclick="filterEvents('Hyderabad',this)">🏛️ Hyderabad</button>
+          <button type="button" class="f-chip city-chip" onclick="filterEvents('Chennai',this)">🌴 Chennai</button>
+          <button type="button" class="f-chip city-chip" onclick="filterEvents('Pune',this)">🏔️ Pune</button>
         </div>
       </div>
     </div>
 
     <div class="container" style="padding-top:36px;padding-bottom:70px">
 
+      <!-- ── CONCERTS ── -->
       <div class="section" style="padding-top:0">
         <div class="sec-head">
           <h2 class="sec-title">🎵 Concerts & Music</h2>
@@ -61,6 +64,7 @@
         </div>
 
         <div class="ev-grid-4" id="concertsGrid">
+
           <div class="ev-card" data-city="Mumbai">
             <div class="ev-banner" style="background:linear-gradient(135deg,#1a0030,#4d0090)">
               <span>🎤</span>
@@ -75,13 +79,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹1,500 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Arijit Singh Live',1500,{
-                city:'Mumbai',
-                venue:'MMRDA Grounds, BKC, Mumbai',
-                date:'28 Mar 2026',
-                category:'Live Concert',
-                description:'A grand live music night with Arijit Singh in Mumbai.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Arijit Singh Live',1500,{city:'Mumbai',venue:'MMRDA Grounds, BKC, Mumbai',date:'28 Mar 2026',category:'Live Concert',description:'A grand live music night with Arijit Singh in Mumbai.'})">Book Now</button>
             </div>
           </div>
 
@@ -99,13 +97,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹2,800 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Coldplay Music of the Spheres — India',2800,{
-                city:'Mumbai',
-                venue:'DY Patil Stadium, Navi Mumbai',
-                date:'5 Apr 2026',
-                category:'Concert',
-                description:'Coldplay live in India with a premium stadium concert experience.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Coldplay Music of the Spheres — India',2800,{city:'Mumbai',venue:'DY Patil Stadium, Navi Mumbai',date:'5 Apr 2026',category:'Concert',description:'Coldplay live in India with a premium stadium concert experience.'})">Book Now</button>
             </div>
           </div>
 
@@ -123,13 +115,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹999 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Nucleya Bass Camp Vol.6',999,{
-                city:'Mumbai',
-                venue:'Mahalaxmi Racecourse, Mumbai',
-                date:'12 Apr 2026',
-                category:'EDM Night',
-                description:'Bass-heavy EDM event by Nucleya with a festival-style setup.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Nucleya Bass Camp Vol.6',999,{city:'Mumbai',venue:'Mahalaxmi Racecourse, Mumbai',date:'12 Apr 2026',category:'EDM Night',description:'Bass-heavy EDM event by Nucleya with a festival-style setup.'})">Book Now</button>
             </div>
           </div>
 
@@ -147,18 +133,106 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹1,200 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Sunburn Arena — Delhi',1200,{
-                city:'Delhi',
-                venue:'Jawaharlal Nehru Stadium, Delhi',
-                date:'20 Apr 2026',
-                category:'DJ Festival',
-                description:'A high-energy Sunburn Arena event in Delhi.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Sunburn Arena — Delhi',1200,{city:'Delhi',venue:'Jawaharlal Nehru Stadium, Delhi',date:'20 Apr 2026',category:'DJ Festival',description:'A high-energy Sunburn Arena event in Delhi.'})">Book Now</button>
             </div>
           </div>
+
+          <!-- NEW CONCERTS -->
+
+          <div class="ev-card" data-city="Bengaluru">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001e0f,#00613a)">
+              <span>🎹</span>
+              <div class="ev-date-badge">26 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">A.R. Rahman — Harmony World Tour</div>
+              <div class="ev-meta">
+                <span>📍 Palace Grounds, Bengaluru</span>
+                <span>⏰ 7:00 PM · 3 hours · Live Orchestra</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹1,800 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('A.R. Rahman — Harmony World Tour',1800,{city:'Bengaluru',venue:'Palace Grounds, Bengaluru',date:'26 Apr 2026',category:'Live Orchestra',description:'A.R. Rahman performing iconic compositions live with a full orchestra.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Chennai">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#1e0f00,#6b3b00)">
+              <span>🪗</span>
+              <div class="ev-date-badge">2 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Ilaiyaraaja — 50 Years of Music</div>
+              <div class="ev-meta">
+                <span>📍 Nehru Indoor Stadium, Chennai</span>
+                <span>⏰ 6:30 PM · Classical Night</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹1,000 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Ilaiyaraaja — 50 Years of Music',1000,{city:'Chennai',venue:'Nehru Indoor Stadium, Chennai',date:'2 May 2026',category:'Classical Night',description:'A tribute concert celebrating 50 years of Ilaiyaraaja\'s musical genius.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Pune">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#00101e,#003360)">
+              <span>🎺</span>
+              <div class="ev-date-badge">29 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">NH7 Weekender Warm-Up — Pune</div>
+              <div class="ev-meta">
+                <span>📍 Fergusson College Ground, Pune</span>
+                <span>⏰ 4:00 PM · Multi-stage Festival</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹899 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('NH7 Weekender Warm-Up — Pune',899,{city:'Pune',venue:'Fergusson College Ground, Pune',date:'29 Apr 2026',category:'Music Festival',description:'A multi-genre outdoor music festival featuring indie and alternative acts.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Hyderabad">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#1c001c,#5a005a)">
+              <span>🎧</span>
+              <div class="ev-date-badge">3 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Dua Lipa — Future Nostalgia Tour India</div>
+              <div class="ev-meta">
+                <span>📍 HITEX Exhibition Centre, Hyderabad</span>
+                <span>⏰ 8:00 PM · International Pop</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹3,500 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Dua Lipa — Future Nostalgia Tour India',3500,{city:'Hyderabad',venue:'HITEX Exhibition Centre, Hyderabad',date:'3 May 2026',category:'International Pop',description:'Dua Lipa brings her chart-topping hits to India for the first time.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Delhi">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001818,#004d4d)">
+              <span>🎻</span>
+              <div class="ev-date-badge">6 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Shankar-Ehsaan-Loy Live 2026</div>
+              <div class="ev-meta">
+                <span>📍 Siri Fort Auditorium, Delhi</span>
+                <span>⏰ 7:30 PM · Bollywood Night</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹1,400 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Shankar-Ehsaan-Loy Live 2026',1400,{city:'Delhi',venue:'Siri Fort Auditorium, Delhi',date:'6 May 2026',category:'Bollywood Night',description:'The iconic trio performs their greatest Bollywood hits live on stage.'})">Book Now</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
+      <!-- ── STAND-UP COMEDY ── -->
       <div class="section" style="padding-top:0">
         <div class="sec-head">
           <h2 class="sec-title">😂 Stand-up Comedy</h2>
@@ -166,6 +240,7 @@
         </div>
 
         <div class="ev-grid-4">
+
           <div class="ev-card" data-city="Mumbai">
             <div class="ev-banner" style="background:linear-gradient(135deg,#201000,#5e2f00)">
               <span>🎙️</span>
@@ -180,13 +255,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹799 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Zakir Khan — Papa Yaar Tour',799,{
-                city:'Mumbai',
-                venue:'Shanmukhananda Hall, Mumbai',
-                date:'30 Mar 2026',
-                category:'Hindi Stand-up',
-                description:'Zakir Khan live with his popular stand-up special.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Zakir Khan — Papa Yaar Tour',799,{city:'Mumbai',venue:'Shanmukhananda Hall, Mumbai',date:'30 Mar 2026',category:'Hindi Stand-up',description:'Zakir Khan live with his popular stand-up special.'})">Book Now</button>
             </div>
           </div>
 
@@ -204,13 +273,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹699 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Anubhav Singh Bassi — Kisi Ko Batana Mat',699,{
-                city:'Delhi',
-                venue:'Talkatora Stadium, Delhi',
-                date:'3 Apr 2026',
-                category:'Hindi Comedy',
-                description:'Bassi live with a premium comedy show experience.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Anubhav Singh Bassi — Kisi Ko Batana Mat',699,{city:'Delhi',venue:'Talkatora Stadium, Delhi',date:'3 Apr 2026',category:'Hindi Comedy',description:'Bassi live with a premium comedy show experience.'})">Book Now</button>
             </div>
           </div>
 
@@ -228,13 +291,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹899 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Kenny Sebastian — Live in Bengaluru',899,{
-                city:'Bengaluru',
-                venue:'Chowdiah Memorial Hall, Bengaluru',
-                date:'8 Apr 2026',
-                category:'English Comedy',
-                description:'Kenny Sebastian performing live in Bengaluru.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Kenny Sebastian — Live in Bengaluru',899,{city:'Bengaluru',venue:'Chowdiah Memorial Hall, Bengaluru',date:'8 Apr 2026',category:'English Comedy',description:'Kenny Sebastian performing live in Bengaluru.'})">Book Now</button>
             </div>
           </div>
 
@@ -252,18 +309,88 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹649 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Harsh Gujral — Jo Bolta Hai Wohi Hota Hai',649,{
-                city:'Hyderabad',
-                venue:'Shilpakala Vedika, Hyderabad',
-                date:'11 Apr 2026',
-                category:'Hindi Comedy',
-                description:'Harsh Gujral live comedy event in Hyderabad.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Harsh Gujral — Jo Bolta Hai Wohi Hota Hai',649,{city:'Hyderabad',venue:'Shilpakala Vedika, Hyderabad',date:'11 Apr 2026',category:'Hindi Comedy',description:'Harsh Gujral live comedy event in Hyderabad.'})">Book Now</button>
             </div>
           </div>
+
+          <!-- NEW COMEDY -->
+
+          <div class="ev-card" data-city="Mumbai">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001020,#003060)">
+              <span>🎤</span>
+              <div class="ev-date-badge">17 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Biswa Kalyan Rath — Sushi Roll</div>
+              <div class="ev-meta">
+                <span>📍 NCPA, Nariman Point, Mumbai</span>
+                <span>⏰ 7:30 PM · English Stand-up</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹749 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Biswa Kalyan Rath — Sushi Roll',749,{city:'Mumbai',venue:'NCPA, Nariman Point, Mumbai',date:'17 Apr 2026',category:'English Stand-up',description:'Biswa Kalyan Rath performs his brand-new hour of stand-up comedy.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Pune">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#1a0a00,#5c3000)">
+              <span>🙃</span>
+              <div class="ev-date-badge">19 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Abhishek Upmanyu — Thoda Aur Suno</div>
+              <div class="ev-meta">
+                <span>📍 Symbiosis Auditorium, Pune</span>
+                <span>⏰ 8:00 PM · Hindi Stand-up</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹599 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Abhishek Upmanyu — Thoda Aur Suno',599,{city:'Pune',venue:'Symbiosis Auditorium, Pune',date:'19 Apr 2026',category:'Hindi Stand-up',description:'Abhishek Upmanyu\'s relatable and laugh-out-loud new special in Pune.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Chennai">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001a10,#00502f)">
+              <span>😆</span>
+              <div class="ev-date-badge">24 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Kanan Gill — Make It Worse</div>
+              <div class="ev-meta">
+                <span>📍 Museum Theatre, Chennai</span>
+                <span>⏰ 7:30 PM · English Comedy</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹699 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Kanan Gill — Make It Worse',699,{city:'Chennai',venue:'Museum Theatre, Chennai',date:'24 Apr 2026',category:'English Comedy',description:'Kanan Gill brings his acclaimed comedy show to Chennai.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Bengaluru">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#200020,#5c005c)">
+              <span>😜</span>
+              <div class="ev-date-badge">27 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Samay Raina — India's Got Latent Tour</div>
+              <div class="ev-meta">
+                <span>📍 Bangalore International Centre</span>
+                <span>⏰ 8:30 PM · Roast-style Comedy</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹849 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Samay Raina — India\'s Got Latent Tour',849,{city:'Bengaluru',venue:'Bangalore International Centre',date:'27 Apr 2026',category:'Roast-style Comedy',description:'Samay Raina\'s viral comedy format comes alive on stage in Bengaluru.'})">Book Now</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
+      <!-- ── SPORTS ── -->
       <div class="section" style="padding-top:0">
         <div class="sec-head">
           <h2 class="sec-title">🏟 Sports</h2>
@@ -271,60 +398,76 @@
         </div>
 
         <div class="ev-grid-4">
-          <div class="sport-card" data-city="Mumbai" onclick="bookEvent('ISL Finals 2026',500,{
-            city:'Mumbai',
-            venue:'Football Arena, Mumbai',
-            date:'18 Apr 2026',
-            category:'Football',
-            description:'ISL Finals live stadium experience.'
-          })">
+
+          <div class="sport-card" data-city="Mumbai" onclick="bookEvent('ISL Finals 2026',500,{city:'Mumbai',venue:'Football Arena, Mumbai',date:'18 Apr 2026',category:'Football',description:'ISL Finals live stadium experience.'})">
             <div class="sport-ico">⚽</div>
             <div class="sport-nm">ISL Finals 2026</div>
             <div class="sport-dt">📅 18 Apr · Football Arena, Mumbai</div>
             <div class="sport-pr">₹500 onwards</div>
           </div>
 
-          <div class="sport-card" data-city="Mumbai" onclick="bookEvent('WWE Live India 2026',1200,{
-            city:'Mumbai',
-            venue:'DY Patil Stadium, Mumbai',
-            date:'22 Apr 2026',
-            category:'Wrestling',
-            description:'WWE Live India arena show.'
-          })">
+          <div class="sport-card" data-city="Mumbai" onclick="bookEvent('WWE Live India 2026',1200,{city:'Mumbai',venue:'DY Patil Stadium, Mumbai',date:'22 Apr 2026',category:'Wrestling',description:'WWE Live India arena show.'})">
             <div class="sport-ico">🥊</div>
             <div class="sport-nm">WWE Live India 2026</div>
             <div class="sport-dt">📅 22 Apr · DY Patil Stadium, Mumbai</div>
             <div class="sport-pr">₹1,200 onwards</div>
           </div>
 
-          <div class="sport-card" data-city="Delhi" onclick="bookEvent('IPL 2026 — DC vs MI',700,{
-            city:'Delhi',
-            venue:'Arun Jaitley Stadium, Delhi',
-            date:'8 Apr 2026',
-            category:'Cricket',
-            description:'IPL match day experience in Delhi.'
-          })">
+          <div class="sport-card" data-city="Delhi" onclick="bookEvent('IPL 2026 — DC vs MI',700,{city:'Delhi',venue:'Arun Jaitley Stadium, Delhi',date:'8 Apr 2026',category:'Cricket',description:'IPL match day experience in Delhi.'})">
             <div class="sport-ico">🏏</div>
             <div class="sport-nm">IPL 2026 — DC vs MI</div>
             <div class="sport-dt">📅 8 Apr · Arun Jaitley Stadium, Delhi</div>
             <div class="sport-pr">₹700 onwards</div>
           </div>
 
-          <div class="sport-card" data-city="Bengaluru" onclick="bookEvent('PKL — Bengaluru vs Patna',300,{
-            city:'Bengaluru',
-            venue:'Sree Kanteerava, Bengaluru',
-            date:'10 Apr 2026',
-            category:'Kabaddi',
-            description:'PKL match with premium sports crowd experience.'
-          })">
+          <div class="sport-card" data-city="Bengaluru" onclick="bookEvent('PKL — Bengaluru vs Patna',300,{city:'Bengaluru',venue:'Sree Kanteerava, Bengaluru',date:'10 Apr 2026',category:'Kabaddi',description:'PKL match with premium sports crowd experience.'})">
             <div class="sport-ico">🤼</div>
             <div class="sport-nm">PKL — Bengaluru vs Patna</div>
             <div class="sport-dt">📅 10 Apr · Sree Kanteerava, Bengaluru</div>
             <div class="sport-pr">₹300 onwards</div>
           </div>
+
+          <!-- NEW SPORTS -->
+
+          <div class="sport-card" data-city="Chennai" onclick="bookEvent('IPL 2026 — CSK vs RCB',850,{city:'Chennai',venue:'MA Chidambaram Stadium, Chennai',date:'14 Apr 2026',category:'Cricket',description:'The iconic Chennai vs Bengaluru IPL rivalry live at Chepauk.'})">
+            <div class="sport-ico">🏏</div>
+            <div class="sport-nm">IPL 2026 — CSK vs RCB</div>
+            <div class="sport-dt">📅 14 Apr · MA Chidambaram Stadium, Chennai</div>
+            <div class="sport-pr">₹850 onwards</div>
+          </div>
+
+          <div class="sport-card" data-city="Hyderabad" onclick="bookEvent('IPL 2026 — SRH vs KKR',750,{city:'Hyderabad',venue:'Rajiv Gandhi International Stadium',date:'16 Apr 2026',category:'Cricket',description:'T20 action at Hyderabad featuring SRH vs KKR.'})">
+            <div class="sport-ico">🏏</div>
+            <div class="sport-nm">IPL 2026 — SRH vs KKR</div>
+            <div class="sport-dt">📅 16 Apr · Rajiv Gandhi Intl. Stadium, Hyd</div>
+            <div class="sport-pr">₹750 onwards</div>
+          </div>
+
+          <div class="sport-card" data-city="Pune" onclick="bookEvent('Badminton Premier League — Pune',400,{city:'Pune',venue:'Balewadi Sports Complex, Pune',date:'21 Apr 2026',category:'Badminton',description:'Top national badminton stars clash in the Premier League format.'})">
+            <div class="sport-ico">🏸</div>
+            <div class="sport-nm">Badminton Premier League — Pune</div>
+            <div class="sport-dt">📅 21 Apr · Balewadi Sports Complex, Pune</div>
+            <div class="sport-pr">₹400 onwards</div>
+          </div>
+
+          <div class="sport-card" data-city="Delhi" onclick="bookEvent('Prime Volleyball League — Delhi',350,{city:'Delhi',venue:'Thyagraj Sports Complex, Delhi',date:'25 Apr 2026',category:'Volleyball',description:'Fast-paced volleyball action in the nation\'s capital.'})">
+            <div class="sport-ico">🏐</div>
+            <div class="sport-nm">Prime Volleyball League — Delhi</div>
+            <div class="sport-dt">📅 25 Apr · Thyagraj Sports Complex, Delhi</div>
+            <div class="sport-pr">₹350 onwards</div>
+          </div>
+
+          <div class="sport-card" data-city="Mumbai" onclick="bookEvent('Ultra Trail Running — Sahyadri 50K',600,{city:'Mumbai',venue:'Karjat, Near Mumbai',date:'4 May 2026',category:'Trail Running',description:'Experience India\'s toughest trail running event through the Sahyadri mountains.'})">
+            <div class="sport-ico">🏃</div>
+            <div class="sport-nm">Ultra Trail Running — Sahyadri 50K</div>
+            <div class="sport-dt">📅 4 May · Karjat, Near Mumbai</div>
+            <div class="sport-pr">₹600 onwards</div>
+          </div>
+
         </div>
       </div>
 
+      <!-- ── THEATRE & EXPERIENCES ── -->
       <div class="section" style="padding-top:0">
         <div class="sec-head">
           <h2 class="sec-title">🎭 Theatre & Experiences</h2>
@@ -332,6 +475,7 @@
         </div>
 
         <div class="ev-grid-4">
+
           <div class="ev-card" data-city="Mumbai">
             <div class="ev-banner" style="background:linear-gradient(135deg,#1a1500,#4d3d00)">
               <span>🎭</span>
@@ -346,13 +490,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹500 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Mughal-E-Azam — The Musical',500,{
-                city:'Mumbai',
-                venue:'NCPA, Nariman Point, Mumbai',
-                date:'Every Weekend',
-                category:'Theatre',
-                description:'A grand musical theatre experience.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Mughal-E-Azam — The Musical',500,{city:'Mumbai',venue:'NCPA, Nariman Point, Mumbai',date:'Every Weekend',category:'Theatre',description:'A grand musical theatre experience.'})">Book Now</button>
             </div>
           </div>
 
@@ -370,13 +508,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹2,000 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Cirque Du Soleil — ECHO India',2000,{
-                city:'Mumbai',
-                venue:'BKC Open Grounds, Mumbai',
-                date:'15 Apr 2026',
-                category:'Live Experience',
-                description:'A premium Cirque-style live show experience.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Cirque Du Soleil — ECHO India',2000,{city:'Mumbai',venue:'BKC Open Grounds, Mumbai',date:'15 Apr 2026',category:'Live Experience',description:'A premium Cirque-style live show experience.'})">Book Now</button>
             </div>
           </div>
 
@@ -394,13 +526,7 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹450 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Magic of India — Grand Illusion Show',450,{
-                city:'Delhi',
-                venue:'Kamani Auditorium, Delhi',
-                date:'18 Apr 2026',
-                category:'Magic Show',
-                description:'Family-friendly illusion and magic experience.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Magic of India — Grand Illusion Show',450,{city:'Delhi',venue:'Kamani Auditorium, Delhi',date:'18 Apr 2026',category:'Magic Show',description:'Family-friendly illusion and magic experience.'})">Book Now</button>
             </div>
           </div>
 
@@ -418,15 +544,204 @@
             </div>
             <div class="ev-foot">
               <span class="ev-price">₹899 onwards</span>
-              <button type="button" class="ev-bk-btn" onclick="bookEvent('Paint & Sip Experience',899,{
-                city:'Hyderabad',
-                venue:'Jubilee Hills, Hyderabad',
-                date:'25 Apr 2026',
-                category:'Art Experience',
-                description:'Creative paint and sip social event.'
-              })">Book Now</button>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Paint & Sip Experience',899,{city:'Hyderabad',venue:'Jubilee Hills, Hyderabad',date:'25 Apr 2026',category:'Art Experience',description:'Creative paint and sip social event.'})">Book Now</button>
             </div>
           </div>
+
+          <!-- NEW THEATRE & EXPERIENCES -->
+
+          <div class="ev-card" data-city="Bengaluru">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001418,#00444d)">
+              <span>🕺</span>
+              <div class="ev-date-badge">23 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Riverdance — 30th Anniversary Tour India</div>
+              <div class="ev-meta">
+                <span>📍 Bangalore Gayana Samaja</span>
+                <span>⏰ 7:00 PM · Irish Dance Spectacular</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹1,200 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Riverdance — 30th Anniversary Tour India',1200,{city:'Bengaluru',venue:'Bangalore Gayana Samaja',date:'23 Apr 2026',category:'Dance Spectacular',description:'The legendary Riverdance show celebrates 30 years with an India tour.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Chennai">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#180018,#4d004d)">
+              <span>🎭</span>
+              <div class="ev-date-badge">Every Friday</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Kalakshetra Classical Dance Drama</div>
+              <div class="ev-meta">
+                <span>📍 Kalakshetra, Thiruvanmiyur, Chennai</span>
+                <span>⏰ 6:30 PM · Bharatanatyam Drama</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹350 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Kalakshetra Classical Dance Drama',350,{city:'Chennai',venue:'Kalakshetra, Chennai',date:'Every Friday',category:'Bharatanatyam Drama',description:'A weekly classical dance drama at the iconic Kalakshetra Foundation.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Mumbai">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#1a000e,#5c0030)">
+              <span>🌌</span>
+              <div class="ev-date-badge">30 Apr 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Immersive Van Gogh — Mumbai Edition</div>
+              <div class="ev-meta">
+                <span>📍 Dome @ NSCI, Worli, Mumbai</span>
+                <span>⏰ Daily 10 AM – 9 PM · Art Installation</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹799 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Immersive Van Gogh — Mumbai Edition',799,{city:'Mumbai',venue:'Dome @ NSCI, Worli, Mumbai',date:'30 Apr 2026',category:'Art Installation',description:'Walk inside Van Gogh\'s masterpieces in a 360° immersive projection experience.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Delhi">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#101a00,#334d00)">
+              <span>🍽️</span>
+              <div class="ev-date-badge">Every Saturday</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Murder Mystery Dinner — The Rajput Palace</div>
+              <div class="ev-meta">
+                <span>📍 The Leela Palace, New Delhi</span>
+                <span>⏰ 7:30 PM · Interactive Theatre + Dinner</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹3,200 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Murder Mystery Dinner — The Rajput Palace',3200,{city:'Delhi',venue:'The Leela Palace, New Delhi',date:'Every Saturday',category:'Interactive Theatre',description:'Solve a murder mystery over a gourmet dinner in royal palace settings.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Pune">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001a14,#005240)">
+              <span>🧘</span>
+              <div class="ev-date-badge">1 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Sound Bath Healing Experience</div>
+              <div class="ev-meta">
+                <span>📍 Osho Ashram, Koregaon Park, Pune</span>
+                <span>⏰ 6:00 PM · Wellness Experience</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹599 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Sound Bath Healing Experience',599,{city:'Pune',venue:'Osho Ashram, Koregaon Park, Pune',date:'1 May 2026',category:'Wellness Experience',description:'A deep relaxation journey through crystal bowls and resonance therapy.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Hyderabad">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#1a1000,#553200)">
+              <span>🏰</span>
+              <div class="ev-date-badge">Every Weekend</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Golconda Fort Sound & Light Show</div>
+              <div class="ev-meta">
+                <span>📍 Golconda Fort, Hyderabad</span>
+                <span>⏰ 7:30 PM · Heritage Experience</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹250 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Golconda Fort Sound & Light Show',250,{city:'Hyderabad',venue:'Golconda Fort, Hyderabad',date:'Every Weekend',category:'Heritage Experience',description:'The grand history of Golconda narrated through a spectacular light and sound show.'})">Book Now</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── FESTIVALS & OUTDOOR ── (NEW section) -->
+      <div class="section" style="padding-top:0">
+        <div class="sec-head">
+          <h2 class="sec-title">🌄 Festivals & Outdoor</h2>
+          <a href="#" class="sec-all">See All →</a>
+        </div>
+
+        <div class="ev-grid-4">
+
+          <div class="ev-card" data-city="Goa">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001020,#002e5c)">
+              <span>🎪</span>
+              <div class="ev-date-badge">3–4 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Goa Weekender Music Festival 2026</div>
+              <div class="ev-meta">
+                <span>📍 Vagator Beach, North Goa</span>
+                <span>⏰ 4:00 PM onwards · 2-Day Festival</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹2,499 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Goa Weekender Music Festival 2026',2499,{city:'Goa',venue:'Vagator Beach, North Goa',date:'3–4 May 2026',category:'Music Festival',description:'A two-day beachside music festival with top Indian and international DJs.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Bengaluru">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#001a04,#005215)">
+              <span>🍕</span>
+              <div class="ev-date-badge">10–11 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Bengaluru Food Festival 2026</div>
+              <div class="ev-meta">
+                <span>📍 Cubbon Park, Bengaluru</span>
+                <span>⏰ 11:00 AM – 10:00 PM · Food & Culture</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹199 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Bengaluru Food Festival 2026',199,{city:'Bengaluru',venue:'Cubbon Park, Bengaluru',date:'10–11 May 2026',category:'Food & Culture',description:'A two-day outdoor food festival celebrating global cuisines in the Garden City.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Mumbai">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#150020,#400060)">
+              <span>🎠</span>
+              <div class="ev-date-badge">7 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Kala Ghoda Arts Festival — Closing Night</div>
+              <div class="ev-meta">
+                <span>📍 Kala Ghoda, South Mumbai</span>
+                <span>⏰ 5:00 PM – 11:00 PM · Arts & Culture</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">Free · ₹99 for special shows</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Kala Ghoda Arts Festival — Closing Night',99,{city:'Mumbai',venue:'Kala Ghoda, South Mumbai',date:'7 May 2026',category:'Arts Festival',description:'The closing night gala of Mumbai\'s beloved arts and culture festival.'})">Book Now</button>
+            </div>
+          </div>
+
+          <div class="ev-card" data-city="Delhi">
+            <div class="ev-banner" style="background:linear-gradient(135deg,#1a0800,#5c2800)">
+              <span>🏮</span>
+              <div class="ev-date-badge">9 May 2026</div>
+            </div>
+            <div class="ev-body">
+              <div class="ev-name">Dilli Haat Summer Carnival</div>
+              <div class="ev-meta">
+                <span>📍 Dilli Haat, INA, New Delhi</span>
+                <span>⏰ 10:00 AM – 9:00 PM · Craft & Folk</span>
+              </div>
+            </div>
+            <div class="ev-foot">
+              <span class="ev-price">₹150 onwards</span>
+              <button type="button" class="ev-bk-btn" onclick="bookEvent('Dilli Haat Summer Carnival',150,{city:'Delhi',venue:'Dilli Haat, INA, New Delhi',date:'9 May 2026',category:'Craft & Folk Festival',description:'Celebrate Indian crafts, folk performances, and street food at Dilli Haat.'})">Book Now</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
